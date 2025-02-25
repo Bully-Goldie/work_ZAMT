@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Командная строка Linux</title>
+  <link href="../Styles/template.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body id="x978549602303" xml:lang="en-US">
+  <div class="Basic-Text-Frame">
+     <h1 id="toc_marker-11" xml:lang="ru-RU">8. Продвинутые приемы работы с клавиатурой</h1>
+
+    <p class="Normal0" xml:lang="ru-RU">Я часто шутливо описываю Unix как «операционную систему для тех, кто любит печатать». Казалось бы, сам факт наличия командной строки доказывает это. Но в действительности пользователи командной строки не любят печатать слишком много. Зачем, если есть так много команд с короткими именами, таких как <span class="command char-style-override-1">cp</span>, <span class="command char-style-override-1">ls</span>, <span class="command char-style-override-1">mv</span> и <span class="command char-style-override-1">rm</span>?</p>
+
+    <p xml:lang="ru-RU">Фактически одной из самых заветных целей командной строки является уменьшение объема ввода — возможность выполнить большую часть работы всего несколькими нажатиями клавиш. Другая цель — не позволить рукам оторваться от клавиатуры и коснуться мыши. В этой главе мы рассмотрим возможности <span class="command char-style-override-1">bash</span>, увеличивающие скорость и эффективность использования клавиатуры.</p>
+
+    <p xml:lang="ru-RU">Здесь будут представлены следующие команды:</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• clear</span> — очищает экран.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• history</span> — выводит содержимое истории команд.</p>
+
+    <h2 id="toc_marker-11-1" xml:lang="ru-RU">Редактирование командной строки</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Для поддержки операций редактирования командной строки<span class="command char-style-override-1"> bash</span> использует библиотеку (коллекцию подпрограмм, которую могут использовать разные программы) с именем <em>Readline</em>. Мы уже видели некоторые из них. Например, нам знакомы клавиши со стрелками влево и вправо, перемещающие курсор, но существует еще целое множество других операций. Рассматривайте их как дополнительные инструменты, которые можно использовать в работе. Необязательно стремиться изучить их все, но многие из них весьма практичны. Выбирайте те, что вам понравятся.</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">ПРИМЕЧАНИЕ</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Некоторые комбинации клавиш, описываемые далее (особенно те, что включают клавишу <span class="interface char-style-override-2">ALT</span>), могут перехватываться графическим интерфейсом и использоваться для выполнения других функций. Однако все комбинации без исключения должны правильно работать в виртуальной консоли.</p>
+
+    <h3 xml:lang="ru-RU">Перемещение курсора</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">В табл. 8.1 перечислены комбинации клавиш, используемые для перемещения курсора.</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 8.1.</strong> Команды перемещения курсора</p>
+
+    <table id="table-19" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <tbody>      <tr>      <td class="Cell-Style-2 cell-style-override-5">       <p class="Tabl-head" xml:lang="ru-RU">Клавиша</p>
+
+</td>
+
+      <td class="Cell-Style-2 cell-style-override-5">       <p class="Tabl-head" xml:lang="ru-RU">Действие</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL+A</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU">Перемещает курсор в начало строки</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL+E</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU">Перемещает курсор в конец строки</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL+F</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU">Перемещает курсор на один символ вперед; действует так же, как клавиша со стрелкой вправо</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL+B</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU">Перемещает курсор на один символ назад; действует так же, как клавиша со стрелкой влево</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT+F</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU">Перемещает курсор на одно слово вперед</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT+B</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU">Перемещает курсор на одно слово назад</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL+L</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-5">       <p class="Tabl-body" xml:lang="ru-RU">Очищает экран и устанавливает курсор в левый верхний угол. То же самое делает команда <span class="command char-style-override-4">clear</span></p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <h3 xml:lang="ru-RU">Изменение текста</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">В табл. 8.2 перечислены комбинации клавиш для редактирования символов в командной строке.</p>
+
+    <h3 xml:lang="ru-RU">Вырезание и вставка (удаление и возврат) текста</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">В документации к Readline используется термин <em>killing and yanking</em> (удаление и возврат), обозначающий операцию, которую обычно называют вырезанием и вставкой (cutting and pasting). В табл. 8.3 перечислены комбинации клавиш, выполняющие вырезание и вставку. Вырезанные элементы сохраняются в кольцевом буфере, который называется <em>kill-ring</em> (кольцо удалений).</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 8.2.</strong> Команды редактирования текста</p>
+
+    <table id="table-20" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <thead>      <tr>      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Клавиша</p>
+
+</td>
+
+      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Действие</p>
+
+</td>
+
+</tr>
+
+</thead>
+
+      <tbody>      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL+D</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Удаляет символ в позиции курсора</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL</span><span class="interface char-style-override-5">+T</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Меняет местами два символа — в позиции курсора и предшествующий ему</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT+T</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Меняет местами два слова — в позиции курсора и предшествующий ему</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT+L</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Переводит в нижний регистр символы, начиная с символа в позиции курсора и до конца слова</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT+U</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Переводит в верхний регистр символы, начиная с символа в позиции курсора и до конца слова</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 8.3.</strong> Команды вырезания и вставки</p>
+
+    <table id="table-21" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <tbody>      <tr>      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Клавиша</p>
+
+</td>
+
+      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Действие</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL+K</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Удаляет символы от позиции курсора до конца строки</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL+U</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Удаляет символы от позиции курсора до начала строки</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT+D</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Удаляет символы от позиции курсора до конца текущего слова</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT+BACKSPACE</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Удаляет символы от позиции курсора до начала текущего слова. Если курсор находится в начале слова, удаляется предшествующее слово</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL+Y</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Извлекает текст из кольцевого буфера удалений и вставляет его в позицию курсора</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">клавиша meta</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Отважившиеся заглянуть в документацию к Readline, которая находится в разделе «READLINE», на странице справочного руководства (<span class="command char-style-override-1">man</span>) для <span class="command char-style-override-1">bash</span>, столкнутся с термином <em>клавиша meta</em> (meta key). На современных клавиатурах ей соответствует клавиша <span class="interface char-style-override-2">ALT</span>, но так было не всегда.</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">В стародавние времена (до появления IBM-совместимых персональных компьютеров, но после появления Unix) персональные компьютеры не были так широко распространены. Иногда их заменяли устройства, называемые <em>терминалами</em>. Терминал — это коммуникационное устройство с текстовым дисплеем и клавиатурой, имеющее внутри столько электроники, сколько необходимо для отображения символов и перемещения курсора. Терминалы подключались (обычно посредством последовательного кабеля) к большому компьютеру или коммуникационной сети большого компьютера. В то время существовало очень много различных терминалов, имевших разные клавиатуры и дисплеи с разными функциональными возможностями. Так как все они поддерживали как минимум набор символов ASCII, разработчикам программного обеспечения, пишущим переносимые приложения, необходимо было прийти к общему знаменателю. В системах Unix применяется очень сложный способ использования терминалов и их разнообразных возможностей. Поскольку разработчики Readline не были уверены в наличии специализированной управляющей клавиши, они изобрели ее и назвали <em>meta</em>. На современных клавиатурах роль клавиши meta играет <span class="interface char-style-override-2">ALT</span>, однако если вы все еще используете терминал (до сих пор поддерживаются в Linux!), можно просто нажать и отпустить клавишу <span class="interface char-style-override-2">ESC</span>, и вы получите эффект нажатия и удержания клавиши <span class="interface char-style-override-2">ALT</span>.</p>
+
+    <h2 id="toc_marker-11-2" xml:lang="ru-RU">Дополнение</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Другой вариант помощи пользователям реализован в командной оболочке в виде механизма <em>дополнения</em> (completion). Дополнение происходит, когда в процессе ввода команды нажимается клавиша <span class="interface char-style-override-2">TAB</span>. Давайте посмотрим, как это работает. Допустим, что ваш домашний каталог содержит следующее:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls</strong></p>
+
+    <p class="listing-body">Desktop&#160;&#160;&#160;&#160;ls-output.txt&#160;&#160;Pictures&#160;&#160;Templates&#160;&#160;&#160;Videos</p>
+
+    <p class="list-last">Documents&#160;&#160;Music&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Public</p>
+
+    <p xml:lang="ru-RU">Попробуйте ввести следующую строку, но не нажимайте клавишу <span class="interface char-style-override-2">ENTER</span>:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls l</strong></p>
+
+    <p xml:lang="ru-RU">Теперь нажмите клавишу <span class="interface char-style-override-2">TAB</span>:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls ls-output.txt</strong></p>
+
+    <p xml:lang="ru-RU">Обратили ли вы внимание, как командная оболочка дополнила командную строку за вас? Попробуйте теперь набрать следующую строку — и снова не нажимайте <span class="interface char-style-override-2">ENTER</span>):</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls D</strong></p>
+
+    <p xml:lang="ru-RU">Нажмите <span class="interface char-style-override-2">TAB</span>:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls D</strong></p>
+
+    <p xml:lang="ru-RU">Дополнения не произошло — просто прозвучал звуковой сигнал. Так получилось потому, что символу <span class="command char-style-override-1">D</span> соответствует более одного элемента в каталоге. Чтобы командная оболочка дополнила вашу строку, предложенная вами «подсказка» должна иметь однозначное продолжение. Попробуйте продолжить ввод:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls Do</strong></p>
+
+    <p xml:lang="ru-RU">Затем нажмите <span class="interface char-style-override-2">TAB</span>:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls Documents</strong></p>
+
+    <p xml:lang="ru-RU">Дополнение произошло.</p>
+
+    <p xml:lang="ru-RU">Этот пример демонстрирует дополнение путей как наиболее частый случай использования дополнения. Однако дополнение также работает с именами переменных (когда слово начинается с символа <span class="command char-style-override-1">$</span>), именами пользователей (когда слово начинается с символа <span class="command char-style-override-1">~</span>), командами (когда дополняемое слово является первым в командной строке) и сетевыми именами компьютеров (когда слово начинается с символа <span class="command char-style-override-1">@</span>). Дополнение сетевых имен компьютеров действует только в отношении имен, перечисленных в <em>/</em><em>etc/hosts</em>.</p>
+
+    <p xml:lang="ru-RU">С механизмом дополнения связано несколько управляющих комбинаций клавиш (табл. 8.4).</p>
+
+    <p xml:lang="ru-RU">Существует еще несколько команд, смысл которых для меня не совсем ясен. Полный список вы сможете найти на странице справочного руководства (<span class="command char-style-override-1">man</span>) для <span class="command char-style-override-1">bash</span>, в разделе «READLINE».</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 8.4.</strong> Команды дополнения</p>
+
+    <table id="table-22" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <tbody>      <tr>      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Клавиша</p>
+
+</td>
+
+      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Действие</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT+?</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span>Выводит список возможных дополнений. В большинстве систем аналогичный эффект можно получить, нажав клавишу </span><span class="interface char-style-override-5">TAB</span><span> второй раз, что намного проще</span></p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT+*</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Вставит все возможные дополнения. Это пригодится в том случае, если требуется использовать больше одного возможного варианта дополнения</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">ПРограммируемое дополнение</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Последние версии <span class="command char-style-override-1">bash</span> реализуют механизм <em>программируемого дополнения</em>. Программируемое дополнение дает возможность добавлять дополнительные правила. Обычно это делается с целью добавить поддержку определенных приложений. Например, можно добавить дополнение списка параметров команды или файлов определенного типа, поддерживаемых приложением. В Ubuntu определено огромное множество таких правил. Программируемое дополнение реализуется посредством функций командной оболочки — небольших мини-сценариев, о которых будет рассказываться в следующих главах. Если вам любопытно, попробуйте выполнить команду</p>
+
+    <p class="vrezka-listing"><span class="command char-style-override-7">set | less </span></p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">и вы увидите их. Однако не все дистрибутивы включают эти функции по умолчанию.</p>
+
+    <h2 id="toc_marker-11-3" xml:lang="ru-RU">Использование истории</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Как рассказывалось в главе 1, <span class="command char-style-override-1">bash</span> поддерживает историю вводившихся команд. Этот список команд хранится в домашнем каталоге, в файле с именем <em>.bash_history</em>. Механизм истории помогает уменьшить объем ручного ввода, особенно в сочетании с командами редактирования командной строки.</p>
+
+    <h3 xml:lang="ru-RU">Поиск в истории</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Просмотреть содержимое истории можно в любой момент с помощью команды:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>history | less</strong></p>
+
+    <p xml:lang="ru-RU">По умолчанию <span class="command char-style-override-1">bash</span> хранит последние 500 введенных команд. Как изменить это значение, мы узнаем в главе 11. А теперь представим, что вам понадобилось найти команды, использовавшиеся для получения списка содержимого <em>/usr/bin</em>. Вот один из возможных способов:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>history | grep /usr/bin</strong></p>
+
+    <p xml:lang="ru-RU">А теперь представим, что среди результатов нужно выбрать запись с интересующей вас командой:</p>
+
+    <p class="list-one">88 ls -l /usr/bin &gt; ls-output.txt</p>
+
+    <p xml:lang="ru-RU">Здесь число <span class="command char-style-override-1">88</span> — это порядковый номер записи команды в списке истории. Зная это число, можно воспользоваться еще одной разновидностью подстановки, которая называется <em>подстановкой записей истории</em> (history expansion). Для этого введите:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>!88</strong></p>
+
+    <p xml:lang="ru-RU">и <span class="command char-style-override-1">bash</span> заменит <span class="command char-style-override-1">!88</span> содержимым 88-й записи в списке истории. Подробнее об этой форме подстановки записей истории мы поговорим чуть ниже.</p>
+
+    <p xml:lang="ru-RU"><span class="command char-style-override-1">bash</span> также дает возможность выполнять поступательный поиск в списке истории. Это означает, что <span class="command char-style-override-1">bash</span> может выполнять поиск в списке истории по мере ввода символов, уточняя результаты с вводом каждого нового символа. Чтобы запустить поступательный поиск, нажмите комбинацию <span class="interface char-style-override-2">CTRL+R</span> и введите искомый текст. Закончив поиск, нажмите <span class="interface char-style-override-2">ENTER</span>, чтобы выполнить команду, или <span class="interface char-style-override-2">CTRL+J</span>, чтобы скопировать запись из списка истории в текущую командную строку. Чтобы найти следующее вхождение текста (переместиться «вверх» по списку истории), нажмите <span class="interface char-style-override-2">CTRL+R</span> еще раз. Чтобы завершить поиск, нажмите <span class="interface char-style-override-2">CTRL+G</span> или <span class="interface char-style-override-2">CTRL+C</span>. Следующий пример демонстрирует, как действует поиск:</p>
+
+    <p class="list-one">[me@linuxbox ~]$</p>
+
+    <p xml:lang="ru-RU">Первое нажатие комбинации <span class="interface char-style-override-2">CTRL+R</span>:</p>
+
+    <p class="list-one">(reverse-i-search)`':</p>
+
+    <p xml:lang="ru-RU">Приглашение к вводу изменится, показывая, что выполняется поступательный поиск в обратном порядке. Под словами «в обратном порядке» подразумевается, что поиск выполняется от «текущего момента» до некоторого момента в прошлом. Далее мы начинаем ввод искомого текста, в данном примере <span class="command char-style-override-1">/usr/bin</span>:</p>
+
+    <p class="list-one">(reverse-i-search)`<strong>/usr/bin</strong>': ls -l /usr/bin &gt; ls-output.txt</p>
+
+    <p xml:lang="ru-RU">Механизм поиска сразу же возвращает результат. Теперь, чтобы выполнить найденную команду, необходимо нажать <span class="interface char-style-override-2">ENTER</span>, или вы можете скопировать команду в командную строку для дальнейшего редактирования, нажав <span class="interface char-style-override-2">CTRL+J</span>. Давайте скопируем ее. Нажмите <span class="interface char-style-override-2">CTRL+J</span>:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ ls -l /usr/bin &gt; ls-output.txt</p>
+
+    <p xml:lang="ru-RU">Механизм поиска вернет управление, командная строка заполнится и будет готова для выполнения!</p>
+
+    <p xml:lang="ru-RU">В табл. 8.5 перечислены некоторые комбинации клавиш, используемые для манипуляций со списком истории команд.</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 8.5.</strong> Команды для работы с историей</p>
+
+    <table id="table-23" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <tbody>      <tr>      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Клавиша</p>
+
+</td>
+
+      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Действие</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL</span><span class="interface char-style-override-5">+</span><span class="interface char-style-override-5">P</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Переход к предыдущей записи в истории. Действует так же, как клавиша со стрелкой вверх</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL</span><span class="interface char-style-override-5">+</span><span class="interface char-style-override-5">N</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Переход к следующей записи в истории. Действует так же, как клавиша со стрелкой вниз</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT</span><span class="interface char-style-override-5">+</span><span class="interface char-style-override-5">&lt;</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Переход в начало (к первой записи) списка истории</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT</span><span class="interface char-style-override-5">+</span><span class="interface char-style-override-5">&gt;</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Переход в конец (к последней записи) списка истории</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL</span><span class="interface char-style-override-5">+</span><span class="interface char-style-override-5">R</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Инкрементальный поиск в обратном порядке. Поиск выполняется поступательно, от текущей записи вверх по списку истории</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT</span><span class="interface char-style-override-5">+</span><span class="interface char-style-override-5">P</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Поиск в обратном порядке, не инкрементальный. При использовании этого вида поиска введите искомую строку и нажмите <span class="interface char-style-override-5">ENTER</span>, и только после этого будет выполнен фактический поиск</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">ALT</span><span class="interface char-style-override-5">+</span><span class="interface char-style-override-5">N</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Поиск в прямом порядке, не поступательный</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">CTRL</span><span class="interface char-style-override-5">+</span><span class="interface char-style-override-5">O</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Выполнить текущую команду в списке истории и перейти к следующей. Эту комбинацию удобно использовать, если требуется повторно выполнить последовательность команд из списка истории</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <h3 xml:lang="ru-RU">Подстановка записей истории</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Командная оболочка поддерживает специализированный вид подстановки — подстановку записей из списка истории при использовании символа <span class="command char-style-override-1">!</span>. Мы уже видели, как восклицательный знак, сопровождаемый числом, замещается записью из списка истории. Этот вид подстановки имеет несколько разновидностей (табл. 8.6).</p>
+
+    <p xml:lang="ru-RU">Не используйте формы <span class="command char-style-override-1">!</span><em>строка</em> и <span class="command char-style-override-1">!?</span><em>строка</em>, если только вы абсолютно точно не знаете содержимого записей в списке истории.</p>
+
+    <p xml:lang="ru-RU">Механизм подстановки записей истории поддерживает также другие комбинации, но эта тема становится слишком запутанной, и мы не станем перегружать себя лишней информацией. Желающие смогут обратиться к странице справочного руководства (<span class="command char-style-override-1">man</span>) для <span class="command char-style-override-1">bash</span>, в разделе «HISTORY EXPANSION». Загляните туда!</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 8.6.</strong> Команды механизма подстановки записей истории</p>
+
+    <table id="table-24" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <tbody>      <tr>      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Последовательность</p>
+
+</td>
+
+      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Действие</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">!!</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Повторяет последнюю команду. Проще, пожалуй, нажать клавишу со стрелкой вверх и <span class="interface char-style-override-5">ENTER</span></p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">!</span><em>число</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Повторяет команду из записи с указанным номером</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">!</span><em>строка</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Повторяет последнюю команду в списке истории, начинающуюся с указанной строки</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">!?</span><em>строка</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Повторяет последнюю команду в списке истории, содержащую указанную строку</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">script</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">В дополнение к истории команд в <span class="command char-style-override-1">bash</span> большинство дистрибутивов Linux включают программу <span class="command char-style-override-1">script</span>, которую можно использовать для записи в файлы целых сеансов работы с командной оболочкой. Базовый синтаксис команды:</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU"><span class="command char-style-override-1">script [</span><em>файл</em><span class="command char-style-override-1">]</span></p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">где <em>файл</em> — это имя файла для записи. Если <em>файл</em> не будет указан, сохранение сеанса будет произведено в файл <em>typescript</em>. Полное описание параметров и возможностей программы можно найти на странице справочного руководства (<span class="command char-style-override-1">man</span>) для <span class="command char-style-override-1">script</span>.</p>
+
+    <h2 id="toc_marker-11-4" xml:lang="ru-RU">Заключительное замечание</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">В этой главе мы рассмотрели <em>несколько</em> приемов работы с клавиатурой, поддерживаемых командной оболочкой, с целью помочь истинным фанатам клавиатуры уменьшить объем работы. Я думаю, что потом, когда вы сроднитесь с командной строкой, вы сможете обратиться к этой главе, чтобы вспомнить описанные здесь приемы. А пока будем считать их необязательными, но потенциально полезными.</p>
+  </div>
+</body>
+</html>

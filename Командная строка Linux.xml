@@ -1,0 +1,854 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Командная строка Linux</title>
+  <link href="../Styles/template.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body id="x978549602303" xml:lang="en-US">
+  <div class="Basic-Text-Frame">
+     <h1 id="toc_marker-6" xml:lang="ru-RU">3. Исследование системы</h1>
+
+    <p class="Normal0" xml:lang="ru-RU">Теперь, когда мы знаем, как перемещаться по файловой системе, совершим обзорное путешествие по системе Linux. Но прежде чем отправиться, познакомимся еще с несколькими командами, которые пригодятся в пути:</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• ls</span> — выводит список содержимого каталога.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• file</span> — определяет тип файла.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• less</span> — выводит содержимое файла.</p>
+
+    <h2 id="toc_marker-6-1" xml:lang="ru-RU">Любопытные возможности ls</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Команда <span class="command char-style-override-1">ls</span> является, пожалуй, одной из самых часто используемых команд, и не без оснований. С ее помощью можно увидеть, что находится в каталоге, и узнать некоторые важные атрибуты файлов и каталогов. Как мы уже видели, чтобы получить список файлов и подкаталогов в текущем рабочем каталоге, достаточно ввести ­команду <span class="command char-style-override-1">ls</span>:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls</strong></p>
+
+    <p class="list-last">Desktop&#160;&#160;Documents&#160;&#160;Music&#160;&#160;Pictures&#160;&#160;Public&#160;&#160;Templates&#160;&#160;Videos</p>
+
+    <p xml:lang="ru-RU">Команде можно явно указать каталог, содержимое которого требуется вывести:</p>
+
+    <p class="list-first">me@linuxbox ~]$ <strong>ls /usr</strong></p>
+
+    <p class="listing-body">bin&#160;&#160;games&#160;&#160;&#160;&#160;kerberos&#160;&#160;libexec&#160;&#160;sbin&#160;&#160;&#160;src</p>
+
+    <p class="list-last">etc&#160;&#160;include&#160;&#160;lib&#160;&#160;&#160;&#160;&#160;&#160;&#160;local&#160;&#160;&#160;&#160;share&#160;&#160;tmp</p>
+
+    <p xml:lang="ru-RU">и даже несколько каталогов. Следующий пример выведет содержимое домашнего каталога пользователя (обозначен символом <em>~</em>) и каталога <em>/usr</em>:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls ~ /usr</strong></p>
+
+    <p class="listing-body">/home/me:</p>
+
+    <p class="listing-body">Desktop&#160;&#160;Documents&#160;&#160;Music&#160;&#160;Pictures&#160;&#160;Public&#160;&#160;Templates&#160;&#160;Videos</p>
+
+    <p class="listing-body">/usr:</p>
+
+    <p class="listing-body">bin&#160;&#160;games&#160;&#160;&#160;&#160;kerberos&#160;&#160;libexec&#160;&#160;sbin&#160;&#160;&#160;src</p>
+
+    <p class="list-last">etc&#160;&#160;include&#160;&#160;lib&#160;&#160;&#160;&#160;&#160;&#160;&#160;local&#160;&#160;&#160;&#160;share&#160;&#160;tmp</p>
+
+    <p xml:lang="ru-RU">Можно также изменить формат вывода, чтобы получить больше информации:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls -l</strong></p>
+
+    <p class="listing-body">total 56</p>
+
+    <p class="listing-body">drwxrwxr-x 2 me me 4096 2012-10-26 17:20 Desktop</p>
+
+    <p class="listing-body">drwxrwxr-x 2 me me 4096 2012-10-26 17:20 Documents</p>
+
+    <p class="listing-body">drwxrwxr-x 2 me me 4096 2012-10-26 17:20 Music</p>
+
+    <p class="listing-body">drwxrwxr-x 2 me me 4096 2012-10-26 17:20 Pictures</p>
+
+    <p class="listing-body">drwxrwxr-x 2 me me 4096 2012-10-26 17:20 Public</p>
+
+    <p class="listing-body">drwxrwxr-x 2 me me 4096 2012-10-26 17:20 Templates</p>
+
+    <p class="list-last">drwxrwxr-x 2 me me 4096 2012-10-26 17:20 Videos</p>
+
+    <p xml:lang="ru-RU">Параметр <span class="command char-style-override-1">-l</span>, добавленный в команду, требует использования «длинного» (long) формата вывода.</p>
+
+    <h3 xml:lang="ru-RU">Параметры и аргументы</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Мы подошли к очень важному моменту, касающемуся особенностей работы большинства команд. Команды часто сопровождаются одним или несколькими <em>параметрами</em>, изменяющими их поведение, и дополнительными, одним или несколькими, <em>аргументами</em>, на которые воздействует команда. Поэтому большинство команд выглядят примерно так:</p>
+
+    <p class="list-one">команда -параметры аргументы</p>
+
+    <p xml:lang="ru-RU">Большинство команд используют параметры, состоящие из одного символа, которому предшествует дефис, например: <span class="command char-style-override-1">-l</span>. Но многие команды, в том числе команды из проекта GNU, поддерживают <em>параметры с длинными именами</em>, состоящие из слова, которому предшествуют два дефиса. Кроме того, многие команды позволяют объединять вместе параметры с короткими именами. В следующем примере команде <span class="command char-style-override-1">ls</span> передаются два параметра: параметр <span class="command char-style-override-1">l</span>, требующий использовать длинный (long) формат вывода, и параметр <span class="command char-style-override-1">t</span>, требующий сортировать результаты по времени (time) изменения:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls -lt</strong></p>
+
+    <p xml:lang="ru-RU">Добавим параметр с длинным именем <span class="command char-style-override-1">--reverse</span>, чтобы изменить порядок сортировки на обратный:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls -lt --reverse</strong></p>
+
+    <p xml:lang="ru-RU">Команда <span class="command char-style-override-1">ls</span> имеет огромное число допустимых параметров. Наиболее популярные из них перечислены в табл. 3.1.</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 3.1.</strong> Наиболее популярные параметры команды ls</p>
+
+    <table id="table-2" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <tbody>      <tr>      <td class="Cell-Style-2 cell-style-override-1">       <p class="Tabl-head" xml:lang="ru-RU">Параметр</p>
+
+</td>
+
+      <td class="Cell-Style-2 cell-style-override-1">       <p class="Tabl-head" xml:lang="ru-RU">Длинный параметр</p>
+
+</td>
+
+      <td class="Cell-Style-2 cell-style-override-1">       <p class="Tabl-head" xml:lang="ru-RU">Описание</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">-a</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">--all</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">Список всех (all) файлов, даже с именами, начинающимися с точки, которые обычно не выводятся (то есть скрытых)</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">-d</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">--directory</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">Обычно в присутствии этого параметра команда <span class="command char-style-override-4">ls</span> выводит информацию о самом каталоге, а не его содержимое. Используйте этот параметр в сочетании с параметром <span class="command char-style-override-4">-l</span>, чтобы получить дополнительную информацию о каталоге, а не о его содержимом</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">-F</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">--classify</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">Добавляет в конец каждого имени символ-индикатор (например, прямой слеш, если это имя каталога)</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">-h</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">--human-readable</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">При использовании длинного формата вывода отображает размеры файлов не в байтах, а в величинах с единицами измерения</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">-l</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">&#160;</p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">Выводит результаты с использованием длинного формата</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">-r</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">--reverse</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">Выводит результаты в обратном порядке. Обычно коман­да <span class="command char-style-override-4">ls</span> выводит результаты в алфавитном порядке</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">-S</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">&#160;</p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">Сортировать результаты по размеру (size)</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">-t</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">&#160;</p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">Сортировать результаты по времени (time) последнего изменения</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <h3 xml:lang="ru-RU">Пристальный взгляд на длинный формат</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Как было показано выше, параметр <span class="command char-style-override-1">-l</span> заставляет команду <span class="command char-style-override-1">ls</span> выводить результаты с использованием длинного формата. Этот формат предусматривает вывод большого количества полезной информации. Ниже приводится пример вывода содержимого каталога <em>Examples</em> в системе Ubuntu:</p>
+
+    <p class="list-first">-rw-r--r-- 1 root root 3576296 2012-04-03 11:05 Experience ubuntu.ogg</p>
+
+    <p class="listing-body">-rw-r--r-- 1 root root 1186219 2012-04-03 11:05 kubuntu-leaflet.png</p>
+
+    <p class="listing-body">-rw-r--r-- 1 root root&#160;&#160;&#160;47584 2012-04-03 11:05 logo-Edubuntu.png</p>
+
+    <p class="listing-body">-rw-r--r-- 1 root root&#160;&#160;&#160;44355 2012-04-03 11:05 logo-Kubuntu.png</p>
+
+    <p class="listing-body">-rw-r--r-- 1 root root&#160;&#160;&#160;34391 2012-04-03 11:05 logo-Ubuntu.png</p>
+
+    <p class="listing-body">-rw-r--r-- 1 root root&#160;&#160;&#160;32059 2012-04-03 11:05 oo-cd-cover.odf</p>
+
+    <p class="listing-body">-rw-r--r-- 1 root root&#160;&#160;159744 2012-04-03 11:05 oo-derivatives.doc</p>
+
+    <p class="listing-body">-rw-r--r-- 1 root root&#160;&#160;&#160;27837 2012-04-03 11:05 oo-maxwell.odt</p>
+
+    <p class="listing-body">-rw-r--r-- 1 root root&#160;&#160;&#160;98816 2012-04-03 11:05 oo-trig.xls</p>
+
+    <p class="listing-body">-rw-r--r-- 1 root root&#160;&#160;453764 2012-04-03 11:05 oo-welcome.odt</p>
+
+    <p class="list-last">-rw-r--r-- 1 root root&#160;&#160;358374 2012-04-03 11:05 ubuntu Sax.ogg</p>
+
+    <p xml:lang="ru-RU">Рассмотрим различные поля для одного из файлов и их назначение (табл. 3.2).</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 3.2.</strong> Поля длинного формата вывода команды ls</p>
+
+    <table id="table-3" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <thead>      <tr>      <td class="Cell-Style-2 cell-style-override-2">       <p class="Tabl-head" xml:lang="ru-RU">Поле</p>
+
+</td>
+
+      <td class="Cell-Style-2 cell-style-override-2">       <p class="Tabl-head" xml:lang="ru-RU">Назначение</p>
+
+</td>
+
+</tr>
+
+</thead>
+
+      <tbody>      <tr>      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">-rw-r-r--</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU">Права доступа к файлу. Первый символ указывает тип файла. Например, символом дефиса обозначаются обычные файлы, а символом <span class="command char-style-override-4">d</span> — каталоги. Следующие три символа сообщают о правах доступа для владельца файла, следующие три — для членов группы, которой принадлежит файл, и последние три — для всех остальных. Более полное обсуждение прав доступа приводится в главе 9</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">1</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU">Число жестких ссылок на файл. Подробнее о ссылках рассказывается в конце этой главы</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">root</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU">Имя пользователя, владеющего файлом</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">root</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU">Имя группы, владеющей файлом</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">32059</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU">Размер файла в байтах</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">2012-04-03 11:05</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU">Дата и время последнего изменения файла</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">oo-cd-cover.odf</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-2">       <p class="Tabl-body" xml:lang="ru-RU">Имя файла</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <h2 id="toc_marker-6-2" xml:lang="ru-RU">Определение типов файлов командой file</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Занимаясь исследованием системы, полезно иметь возможность определять тип содержимого файлов. В этом нам поможет команда <span class="command char-style-override-1">file</span>. Как отмечалось выше, имена файлов в Linux не обязаны отражать тип содержимого файлов. Например, увидев имя файла <em>picture.jpg</em>, можно предположить, что он содержит изображение в формате JPEG, но в Linux такие предположения могут не оправдываться. Вызвать команду <span class="command char-style-override-1">file</span> можно так:</p>
+
+    <p class="list-one">file <em>имя_файла</em></p>
+
+    <p xml:lang="ru-RU">Команда <span class="command char-style-override-1">file</span> выводит краткое описание содержимого файла. Например:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>file picture.jpg</strong></p>
+
+    <p class="list-last">picture.jpg: JPEG image data, JFIF standard 1.01</p>
+
+    <p xml:lang="ru-RU">Существует множество разных типов файлов. Одна из известных идей в Unix-подобных системах, таких как Linux, гласит: «Все сущее есть файл». По мере чтения книги вы убедитесь в истинности этого утверждения.</p>
+
+    <p xml:lang="ru-RU">Типы многих файлов в вашей системе будут вам знакомы, например файлы MP3 и JPEG, но иногда будут попадаться файлы с малоизвестными и даже странными типами.</p>
+
+    <h2 id="toc_marker-6-3" xml:lang="ru-RU">Просмотр содержимого файлов командой less</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Команда <span class="command char-style-override-1">less</span> — это программа для просмотра текстовых файлов. В системе Linux присутствует множество файлов, содержащих обычный, удобочитаемый текст. Программа <span class="command char-style-override-1">less</span> предоставляет удобный способ исследовать их содержимое.</p>
+
+    <p xml:lang="ru-RU">Зачем может понадобиться исследовать текстовые файлы? Дело в том, что многие файлы с системными настройками (их называют <em>конфигурационными файлами</em>) хранят информацию в этом формате, что дает возможность прочитать их и вникнуть в особенности работы системы. Кроме того, в этом формате хранятся многие программы в системе (их называют <em>сценариями</em>). В последних главах мы узнаем, как редактировать файлы с настройками системы и как писать свои сценарии, а пока просто просматривайте их содержимое.</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">что есть «текст»</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Существует множество способов представления информации в компьютере. Все способы связаны с определением отношения между смысловой информацией и числами, которые применяются для ее представления. В конце концов, компьютеры могут работать только с числами, и все данные в компьютере преобразуются в числовое представление.</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Некоторые из этих систем представления очень сложны (например, сжатые видеофайлы), другие, напротив, очень просты. Одна из самых ранних и простых систем называется <em>ASCII-текст</em>. ASCII (произносится «ас-ки») — это аббревиатура названия «American Standard Code for Information Interchange» (американский стандартный код для обмена информацией). Эта простая система кодирования впервые была использована в телетайпах.</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Текст — это простое отображение «один в один» символов в числа. Это очень компактный формат. Пятьдесят символов текста преобразуются в пятьдесят байт данных. Но это не то же самое, что текст в документе, созданном текстовым процессором, таким как Microsoft Word или OpenOffice.org Writer. Файлы документов, в отличие от простых файлов с ASCII-текстом, содержат множество нетекстовых элементов, используемых для описания их структуры и форматирования. Файлы с простым ASCII-текстом содержат только сами символы и очень небольшое количество простейших кодов управления, таких как символы табуляции, возврата каретки и перевода строки.</p>
+
+    <p class="Vrezka-body-Last" xml:lang="ru-RU">В системе Linux многие файлы хранятся в текстовом формате, и многие инструменты работают с текстовыми файлами. Даже Windows признает важность этого формата. Хорошо известная программа Notepad (Блокнот) — это редактор для простых файлов с ASCII-текстом.</p>
+
+    <p xml:lang="ru-RU">Команда <span class="command char-style-override-1">less</span> используется так:</p>
+
+    <p class="list-one">less <em>имя_файла</em></p>
+
+    <p xml:lang="ru-RU">После запуска программа <span class="command char-style-override-1">less</span> позволяет прокручивать текстовый файл взад и вперед. Например, просмотреть содержимое файла со всеми известными системе учетными записями пользователей можно с помощью следующей команды:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>less /etc/passwd</strong></p>
+
+    <p xml:lang="ru-RU">После запуска программа <span class="command char-style-override-1">less</span> выведет содержимое файла. Если файл занимает больше одной страницы, его можно прокручивать вверх и вниз. Чтобы выйти из программы <span class="command char-style-override-1">less</span>, нажмите клавишу <span class="interface char-style-override-2">Q</span>.</p>
+
+    <p xml:lang="ru-RU">В табл. 3.3 перечислены клавиатурные команды, наиболее часто используемые в программе <span class="command char-style-override-1">less</span>.</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 3.3.</strong> Команды программы less</p>
+
+    <table id="table-4" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <tbody>      <tr>      <td class="Cell-Style-2 cell-style-override-3">       <p class="Tabl-head" xml:lang="ru-RU">Команда</p>
+
+</td>
+
+      <td class="Cell-Style-2 cell-style-override-3">       <p class="Tabl-head" xml:lang="ru-RU">Действие</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">Page Up</span> или <span class="interface char-style-override-5">b</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU">Прокрутка к началу на одну страницу</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">Page Down</span> или <span class="interface char-style-override-5">ПРОБЕЛ</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU">Прокрутка к концу на одну страницу</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">СТРЕЛКА ВВЕРХ</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU">Прокрутка к началу на одну строку</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">СТРЕЛКА ВНИЗ</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU">Прокрутка к концу на одну строку</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">G</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU">Переход в конец текстового файла</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">1G</span> или <span class="interface char-style-override-5">g</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU">Переход в начало текстового файла</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">/</span><em>символы</em></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU">Поиск вниз по тексту до ближайшего вхождения указанной последовательности символов</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">n</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU">Поиск следующего вхождения искомой последовательности символов</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">h</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU">Вывод экрана со справкой</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU"><span class="interface char-style-override-5">q</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-3">       <p class="Tabl-body" xml:lang="ru-RU">Завершить <span class="command char-style-override-4">less</span></p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">меньше значит больше</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Программа <span class="command char-style-override-1">less</span> создавалась как улучшенная замена более ранней Unix-программы с именем <span class="command char-style-override-1">more</span>. Ее имя — это игра слов «less is more» (меньше значит больше) — девиз архитекторов-модернистов и проектировщиков.</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU"><span class="command char-style-override-1">less</span> относится к категории программ постраничного просмотра текстовых документов, которые называют пейджерами (pagers). В отличие от программы <span class="command char-style-override-1">more</span>, которая может листать страницы только вперед, программа <span class="command char-style-override-1">less</span> способна листать текст в обоих направлениях, вперед и назад, и имеет множество других особенностей.</p>
+
+    <h2 id="toc_marker-6-4" xml:lang="ru-RU">Обзорное путешествие</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Файловая система в Linux имеет практически ту же компоновку, что и в других Unix-подобных системах. Фактически ее структура определяется опубликованным стандартом с названием «Linux Filesystem Hierarchy Standard». Не все дистрибутивы Linux следуют этому стандарту, но большинство придерживаются его достаточно близко.</p>
+
+    <p xml:lang="ru-RU">А теперь немного попутешествуем по файловой системе и познакомимся с основными достопримечательностями системы Linux. Это даст нам шанс попрактиковаться в навигации. Первое, что мы обнаружим: многие интересные файлы имеют простой текстовый формат. В ходе путешествия пробуйте выполнить следующие действия:</p>
+
+    <p class="ListNum" xml:lang="ru-RU">1. С помощью команды <span class="command char-style-override-1">cd</span> перейдите в указанный каталог.</p>
+
+    <p class="ListNum" xml:lang="ru-RU">2. Выведите содержимое каталога командой <span class="command char-style-override-1">ls -l</span>.</p>
+
+    <p class="ListNum" xml:lang="ru-RU">3. Если увидите заинтересовавший вас файл, определите его тип командой <span class="command char-style-override-1">file</span>.</p>
+
+    <p class="ListNumLast" xml:lang="ru-RU">4. Если файл выглядит как текстовый, попробуйте просмотреть его командой <span class="command char-style-override-1">less</span>.</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">ПРИМЕЧАНИЕ</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Вспомните трюк с копированием и вставкой! Если вы пользуетесь мышью, выполните двойной щелчок на имени файла, чтобы скопировать его, и щелчок средней кнопкой, чтобы вставить в команду.</p>
+
+    <p xml:lang="ru-RU">В ходе путешествия не бойтесь заглядывать внутрь системы. Обычные пользователи практически ничего не смогут испортить. Это работа системного администратора! Если команда пожалуется на что-то, просто перейдите к чему-нибудь другому. Потратьте некоторое время на знакомство с окрестностями. Это наша система, и мы вправе заниматься ее исследованием. Помните, что в Linux нет секретов!</p>
+
+    <p xml:lang="ru-RU">В табл. 3.4 перечислены несколько каталогов для исследования. Но вы можете заняться исследованием любых других каталогов!</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 3.4.</strong> Каталоги в системе Linux</p>
+
+    <table id="table-5" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <thead>      <tr>      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Каталог</p>
+
+</td>
+
+      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Описание</p>
+
+</td>
+
+</tr>
+
+</thead>
+
+      <tbody>      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Корневой каталог, откуда все начинается</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/bin</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Содержит двоичные (binaries) файлы (программы), необходимые для загрузки и функционирования системы</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/boot</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Содержит ядро Linux, образ начального RAM-диска (с драйверами, необходимыми на этапе загрузки) и сам загрузчик.</p>
+
+      <p class="Tabl-body" xml:lang="ru-RU">Интересные файлы:</p>
+
+      <p class="Tabl-body" xml:lang="ru-RU"><em>/boot/grub/grub.</em><em>conf</em> или <em>menu.lst</em>, используются для настройки загрузчика</p>
+
+      <p class="Tabl-body" xml:lang="ru-RU"><em>/boot/vmlinuz</em>, ядро Linux</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/dev</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Специальный каталог, содержащий узлы устройств. «Все сущее есть файл» применяется также к устройствам. Здесь ядро хранит список всех известных ему устройств</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/etc</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Каталог <em>/etc</em> содержит все системные конфигурационные файлы. Здесь же хранится коллекция сценариев командной оболочки, запускающих системные службы во время загрузки. Практически все файлы в этом каталоге содержат обычный читаемый текст.</p>
+
+      <p class="Tabl-body" xml:lang="ru-RU">Интересные файлы: в <em>/etc</em> все интересно, но, на мой взгляд, особенный интерес представляют:</p>
+
+      <p class="Tabl-body" xml:lang="ru-RU"><em>/etc/crontab</em>, файл, определяющий время запуска автоматизированных заданий;</p>
+
+      <p class="Tabl-body" xml:lang="ru-RU"><em>/etc/fstab</em>, таблица устройств хранения и соответствующих им точек монтирования;</p>
+
+      <p class="Tabl-body" xml:lang="ru-RU"><em>/etc/passwd</em>, список всех учетных записей пользователей</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/home</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">В обычных конфигурациях каждому пользователю выделяется свой домашний каталог в каталоге <em>/home</em>. Простые пользователи могут записывать что-нибудь только в файлы, находящиеся в их домашних каталогах. Это ограничение защищает систему от необдуманных действий пользователей</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/lib</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Содержит файлы разделяемых библиотек, используемых основными системными программами. Они напоминают библиотеки DLL в Windows</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/lost+found</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Каждый раздел или устройство, отформатированные с использованием файловой системы Linux, такой как ext3, будут иметь этот каталог. Он используется на случай частичного восстановления повреждений в файловой системе. Если с системой ничего страшного не происходило, этот каталог будет оставаться пустым</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/media</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">В современных системах Linux каталог <em>/media</em> будет содержать точки монтирования съемных носителей, таких как USB-диски, CD-ROM и т.д., которые монтируются в момент подключения</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/mnt</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">В старых системах Linux каталог <em>/mnt</em> содержал точки монтирования съемных носителей, монтируемых вручную</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/opt</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Каталог <em>/opt</em> используется для установки «необязательного» (optional) программного обеспечения. В основном используется для установки коммерческого программного обеспечения</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/proc</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Специальный каталог. Не является фактической файловой системой, в том смысле, что файлы в этом каталоге не хранятся на жестком диске. Это виртуальная файловая система, поддерживаемая ядром Linux. Файлы в ней являются «глазк<em>а</em>ми», через которые можно заглянуть в ядро. Эти файлы доступны для чтения и помогают «увидеть» компьютер глазами ядра</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/root</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Домашний каталог пользователя root</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/sbin</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Каталог содержит системные двоичные файлы (system binaries). Эти программы выполняют жизненно важные задачи и обычно запускаются только суперпользователем</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/tmp</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Каталог <em>/</em><em>tmp</em> играет роль временного хранилища для временных файлов, создаваемых разными программами. В некоторых конфигурациях этот каталог принудительно очищается при каждой перезагрузке системы</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/usr</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Дерево каталогов <em>/usr</em> является, пожалуй, самым объемным в системе Linux. В нем хранятся все программы и файлы поддержки, используемые обычными пользователями</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/usr/bin</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Каталог <em>/usr/bin</em> содержит выполняемые программы, установленные дистрибутивом Linux. Очень часто в этом каталоге хранятся тысячи программ</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/usr/lib</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Содержит разделяемые библиотеки для программ в <em>/usr/bin</em></p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/usr/local</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Дерево каталогов <em>/usr/local</em> используется для установки тех программ, которые не входят в состав дистрибутива, но должны быть доступны всем пользователям в системе. Программы, собираемые из исходных текстов, обычно устанавливаются в <em>/usr/local/bin</em>. В новейших версиях системы Linux это дерево каталогов присутствует, но остается пустым, пока системный администратор не добавит туда что-нибудь</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/usr/sbin</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Содержит дополнительные программы для администрирования</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/usr/share</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Каталог <em>/usr/share</em> содержит все разделяемые данные, используемые программами в <em>/usr/bin</em>, в том числе конфигурационные файлы с настройками по умолчанию, ярлыки, фоновые изображения для рабочего стола, звуковые файлы и т.д.</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/usr/share/doc</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Большинство пакетов, установленных в системе, содержат документацию. Вся эта документация, организованная по пакетам, хранится в каталоге <em>/usr/share/</em><em>doc</em></p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/var</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span>За исключением </span><em>/tmp</em><span> и </span><em>/home</em><span>, все упоминавшиеся выше каталоги остаются относительно статичными; то есть их содержимое почти не меняется. Дерево каталогов </span><em>/var</em><span> — как раз то место, где хранятся часто изменяемые данные: различные базы данных, буферные файлы, почта пользователей и пр.</span></p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/var/log</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Каталог <em>/var/log</em> содержит файлы журналов с записями о различных действиях, выполнявшихся в системе. Они очень важны и должны проверяться время от времени. Наиболее полезным является файл <em>/var/log/messages</em>. Обратите внимание, что из соображений безопасности некоторые системы требуют привилегий суперпользователя для просмотра файлов журналов</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <h2 id="toc_marker-6-5" xml:lang="ru-RU">Символические ссылки</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Просматривая содержимое каталогов, нередко можно увидеть такие записи:</p>
+
+    <p class="list-one">lrwxrwxrwx 1 root root 11 2012-08-11 07:34 libc.so.6 -&gt; libc-2.6.so</p>
+
+    <p xml:lang="ru-RU">Обратили внимание на первую букву <span class="command char-style-override-1">l</span> и на присутствие двух имен файлов в конце? Это специальный файл, который называется <em>символической ссылкой</em> (иногда их называют <em>мягкими ссылками</em> или, на жаргоне, <em>симлинками</em>). В большинстве Unix-подобных систем можно дать одному и тому же файлу несколько имен. Даже при том, что на данный момент ценность такого приема может быть не очевидна, в действительности это очень удобная возможность.</p>
+
+    <p xml:lang="ru-RU">Вообразите следующий сценарий: программе требуется некий разделяемый ресурс (например, библиотека), хранящийся в файле с именем <em>foo</em>, но номер версии <em>foo</em> меняется очень часто. Было бы хорошо включить номер версии в имя файла, чтобы администратор или другое заинтересованное лицо могли видеть, какая версия <em>foo</em> установлена. И здесь возникает проблема. Если изменить имя разделяемого ресурса, нам придется проверять каждую программу, использующую этот ресурс, и изменять в ней имя ресурса на новое, после установки новой версии ресурса. Если честно, такая перспектива не выглядит привлекательной.</p>
+
+    <p xml:lang="ru-RU">Символические ссылки помогут спасти положение. Допустим, мы установили <em>foo</em> версии 2.6 с именем файла <em>foo-2.6</em> и затем создали символическую ссылку с простым именем <em>foo</em>, указывающую на ресурс <em>foo-2.6</em>. То есть когда программа откроет файл <em>foo</em>, в действительности она откроет файл <em>foo</em><em>-2.6</em>. И все будут счастливы. Программы, полагающиеся на имя <em>foo</em>, найдут нужный файл, а мы сможем увидеть фактическую версию ресурса. Когда придет время обновить ресурс до версии <em>foo-2.7</em>, мы просто добавим файл в систему, удалим символическую ссылку <em>foo</em> и создадим новую символическую ссылку, указывающую на новую версию. Такой подход не только решает проблему обновления версий, но также позволяет сохранить на компьютере обе версии ресурса. Представьте, что в версии <em>foo-2.7</em> обнаружилась ошибка (ох уж эти разработчики!) и нужно вернуть старую версию. В этом случае достаточно просто вновь удалить символическую ссылку, указывающую на новую версию, и создать новую символическую ссылку, указывающую на старую версию.</p>
+
+    <p xml:lang="ru-RU">Запись выше (получена в каталоге <em>/lib</em> в системе Fedora) соответствует символической ссылке с именем <em>libc.so</em><em>.6</em>, указывающей на файл разделяемой библиотеки с именем <em>libc-2.6.so</em>. Это означает, что программа, ищущая <em>libc.so.6</em>, фактически получит файл <em>libc-2.6.so</em>. Как создавать символические ссылки, мы узнаем в следующей главе.</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">жесткие ссылки</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Пока мы не ушли далеко от темы ссылок, нужно упомянуть, что существует второй тип ссылок, которые называют <em>жесткими ссылками</em> (hard link). Жесткие ссылки так же позволяют присвоить одному файлу несколько имен, но они действуют иначе. Подробнее о различиях между жесткими и символическими ссылками рассказывается в следующей главе.</p>
+
+    <p xml:lang="ru-RU">&#160;</p>
+  </div>
+</body>
+</html>
