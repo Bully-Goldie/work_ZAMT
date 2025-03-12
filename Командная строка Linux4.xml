@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Командная строка Linux</title>
+  <link href="../Styles/template.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body id="x978549602303" xml:lang="en-US">
+  <div class="Basic-Text-Frame">
+     <h1 id="toc_marker-9" xml:lang="ru-RU">6. Перенаправление</h1>
+
+    <p class="Normal0" xml:lang="ru-RU">В этом уроке мы познакомимся с самой крутой возможностью командной строки: перенаправлением ввода/вывода. Благодаря этой возможности мы сможем перенаправлять ввод и вывод команд из файлов и в файлы, а также составлять из команд целые конвейеры. Для демонстрации этой возможности введем в обиход следующие команды:</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• cat</span> — объединяет файлы.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• sort</span> — сортирует строки текста.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• uniq</span> — сообщает о повторяющихся строках или удаляет их.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• wc</span> — выводит число символов перевода строки, слов и байтов в каждом указанном файле.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• grep</span> — находит и выводит строки, соответствующие шаблону.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• head</span> — выводит первые строки из файла.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• tail</span> — выводит последние строки из файла.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• tee</span> — читает данные со стандартного ввода и записывает в стандартный вывод и в файлы.</p>
+
+    <h2 id="toc_marker-9-1" xml:lang="ru-RU">Стандартный ввод, вывод и вывод ошибок</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Многие программы, которыми мы уже пользовались, что-нибудь выводят на консоль. Этот вывод часто делится на два типа. Первый — результаты работы программы, то есть данные, для получения которых создавалась программа. Второй — сообщения о состоянии или об ошибках, извещающие нас о самочувствии программы. Например, если взглянуть на вывод программы <span class="command char-style-override-1">ls</span>, можно увидеть, что она выводит на экран результаты своей работы и иногда сообщения об ошибках.</p>
+
+    <p xml:lang="ru-RU">Согласно центральной идее Unix, что «все сущее есть файл», такие программы, как <span class="command char-style-override-1">ls</span>, в действительности выводят свои результаты в специальный файл, который называется <em>стандартным выводом</em> (standard output, часто обозначается как <em>stdout</em>), а сообщения о состоянии — в специальный файл <em>стандартный вывод ошибок</em> (standard error, <em>stderr</em>). По умолчанию оба файла, стандартный вывод и стандартный вывод ошибок, связаны с экраном и не сохраняются на диске.</p>
+
+    <p xml:lang="ru-RU">Кроме того, многие программы принимают ввод из специального файла с названием <em>стандартный ввод</em> (standard input, <em>stdin</em>), который по умолчанию связан с клавиатурой.</p>
+
+    <p xml:lang="ru-RU">Механизм перенаправления ввода/вывода позволяет изменять направление вывода и ввода. Обычно вывод осуществляется на экран, а ввод — с клавиатуры, но механизм перенаправления ввода/вывода позволяет изменить этот порядок вещей.</p>
+
+    <h3 xml:lang="ru-RU">Перенаправление стандартного вывода</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Механизм перенаправления ввода/вывода позволяет явно указать, куда должен осуществляться стандартный вывод. Чтобы перенаправить стандартный вывод в другой файл вместо экрана, нужно добавить в команду оператор перенаправления <span class="command char-style-override-1">&gt;</span> и имя файла. Где это может пригодиться? Иногда полезно сохранить вывод команды в файл. Например, можно сообщить командной оболочке, что она должна направить вывод команды <span class="command char-style-override-1">ls</span> в файл <em>ls-output.txt</em> вместо экрана:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls -l /usr/bin &gt; ls-output.txt</strong></p>
+
+    <p xml:lang="ru-RU">Здесь мы создали длинный список содержимого файла <em>/usr/bin</em> и отправили результаты в файл <em>ls-</em><em>output.txt</em>. Давайте исследуем перенаправленный вывод команды:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls -l ls-output.txt</strong></p>
+
+    <p class="list-last">-rw-rw-r-- 1 me&#160;&#160;me&#160;&#160;167878 2012-02-01 15:07 ls-output.txt</p>
+
+    <p xml:lang="ru-RU">Неплохой файл получился. Если вывести содержимое <em>ls-output.txt</em> с помощью коман­ды <span class="command char-style-override-1">less</span>, можно увидеть, что он действительно содержит результаты работы команды <span class="command char-style-override-1">ls</span>:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>less ls-output.txt</strong></p>
+
+    <p xml:lang="ru-RU">Давайте теперь повторим эксперимент с перенаправлением, но с небольшим усложнением: укажем имя несуществующего каталога:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls -l /bin/usr &gt; ls-output.txt</strong></p>
+
+    <p class="list-last">ls: невозможно получить доступ к '/bin/usr': Нет такого файла или каталога</p>
+
+    <p xml:lang="ru-RU">Мы получили сообщение об ошибке. Все логично — мы указали несуществующий каталог<em> /bin/usr</em>, но почему же сообщение появилось на экране, а не было перенаправлено в файл <em>ls-output</em><em>.txt</em>? Дело в том, что программа <span class="command char-style-override-1">ls</span> не выводит сообщения об ошибках в стандартный вывод. Как и многие добропорядочные программы для Unix, она выводит сообщения об ошибках в стандартный поток вывода ошибок. Поскольку мы перенаправили только стандартный вывод, а стандартный вывод ошибок — нет, сообщение об ошибке появилось на экране. Как перенаправить стандартный вывод ошибок, будет показано чуть ниже, но перед этим посмотрим, что произошло с нашим файлом:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls -l ls-output.txt</strong></p>
+
+    <p class="list-last">-rw-rw-r-- 1 me me 0 2012-02-01 15:08 ls-output.txt</p>
+
+    <p xml:lang="ru-RU">Файл очистился! Это объясняется тем, что при перенаправлении вывода с помощью оператора <span class="command char-style-override-1">&gt;</span> файл назначения всегда перезаписывается с самого начала. Поскольку команда <span class="command char-style-override-1">ls</span> не вывела никаких результатов, а только сообщение об ошибке, оператор перенаправления перезаписал файл, а затем остановился из-за ошибки, что привело к его очистке. Получается, что если вам понадобится очистить какой-нибудь файл (или создать новый, пустой файл), это можно сделать с помощью следующего трюка:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>&gt; ls-output.txt</strong></p>
+
+    <p xml:lang="ru-RU">Простой оператор перенаправления, без предшествующей ему команды, очистит существующий файл или создаст новый, пустой файл.</p>
+
+    <p xml:lang="ru-RU">Так как же добавить вывод в конец существующего файлa, не затерев его? Для этого используем оператор перенаправления <span class="command char-style-override-1">&gt;&gt;</span>:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls -l /usr/bin &gt;&gt; </strong><strong>ls-output.txt</strong></p>
+
+    <p xml:lang="ru-RU">Оператор <span class="command char-style-override-1">&gt;&gt;</span> просто добавит результаты в конец файла. Если файл не существует, он будет создан, как при использовании оператора <span class="command char-style-override-1">&gt;</span>. Давайте протестируем его:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls -l /</strong><strong>usr/bin &gt;&gt; ls-output.txt</strong></p>
+
+    <p class="listing-body">[me@linuxbox ~]$ <strong>ls -l /usr/bin &gt;&gt; ls-output.txt</strong></p>
+
+    <p class="listing-body">[me@linuxbox ~]$ <strong>ls -l /usr/bin &gt;&gt; ls-output.txt</strong></p>
+
+    <p class="listing-body">[me@linuxbox ~]$ <strong>ls -l ls-output.txt</strong></p>
+
+    <p class="list-last">-rw-rw-r-- 1 me&#160;&#160;me 503634 2012-02-01 15:45 ls-output.txt</p>
+
+    <p xml:lang="ru-RU">Мы повторили команду трижды и получили файл втрое большего размера.</p>
+
+    <h3 xml:lang="ru-RU">Перенаправление стандартного вывода ошибок</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Перенаправление стандартного вывода ошибок осуществляется не так просто, как стандартного вывода. Чтобы перенаправить стандартный вывод ошибок, нужно указать его <em>дескриптор файла</em>. Программа может производить вывод в любой из нескольких нумерованных файловых потоков. Первые три из них мы упомянули как стандартный ввод, вывод и вывод ошибок. Командная оболочка ссылается на них как на файловые дескрипторы <span class="command char-style-override-1">0</span>, <span class="command char-style-override-1">1</span> и <span class="command char-style-override-1">2</span> соответственно. Командная оболочка поддерживает синтаксис перенаправления файлов с использованием номеров файловых дескрипторов. Так как стандартному выводу ошибок соответствует файловый дескриптор <span class="command char-style-override-1">2</span>, мы можем перенаправить его, как показано ниже:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls -l /bin/usr 2&gt; ls-error.txt</strong></p>
+
+    <p xml:lang="ru-RU">Номер файлового дескриптора <span class="command char-style-override-1">2</span> помещается непосредственно перед оператором перенаправления, чтобы перенаправить стандартный вывод ошибок в файл <em>ls-e</em><em>rror.</em><em>txt</em>.</p>
+
+    <h3 xml:lang="ru-RU">Перенаправление стандартного вывода и стандартного вывода ошибок в один файл</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Иногда необходимо сохранить весь вывод команды в один файл. Для этого перенаправьте сразу два потока, стандартный вывод и стандартный вывод ошибок. Сделать это можно двумя способами. Первый&#160;&#160;— традиционный — работает в старых версиях командной оболочки:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls -l /bin/usr &gt; ls-output.txt 2&gt;&amp;1</strong></p>
+
+    <p xml:lang="ru-RU">Здесь выполняется два перенаправления. Сначала — перенаправление стандартного вывода в файл <em>ls-output.txt</em>, а затем, с использованием нотации <span class="command char-style-override-1">2&gt;&amp;1</span>, — перенаправление файлового дескриптора <span class="command char-style-override-1">2</span> (стандартный вывод ошибок) в файловый дескриптор <span class="command char-style-override-1">1</span> (стандартный вывод).</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">ПРИМЕЧАНИЕ</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Имейте в виду, что порядок перенаправления играет важную роль. Перенаправление стандартного вывода ошибок всегда должно производиться после перенаправления стандартного вывода, иначе этот трюк не сработает. В примере, приведенном выше, последовательность <span class="command char-style-override-1">&gt; ls-output.txt 2&gt;&amp;1</span> перенаправит стандартный вывод ошибок в файл <em>ls-output.txt</em>, но если порядок перенаправления изменить на <span class="command char-style-override-1">2&gt;&amp;1 &gt; ls-output.txt</span>, стандартный вывод ошибок будет перенаправлен на экран.</p>
+
+    <p xml:lang="ru-RU">Современные версии <span class="command char-style-override-1">bash</span> поддерживают второй, более простой метод выполнения перенаправления этого вида:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls -l /bin/usr &amp;&gt; ls-output.txt</strong></p>
+
+    <p xml:lang="ru-RU">В данном примере используется единственный оператор <span class="command char-style-override-1">&amp;&gt;</span>, перенаправляющий стандартный вывод и стандартный вывод ошибок в файл <em>ls-output.txt</em>.</p>
+
+    <h3 xml:lang="ru-RU">Удаление нежелательного вывода</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Иногда молчание действительно золото, и вывод команды нужно отбросить. В особенности это касается служебных сообщений и сообщений об ошибках. Система дает такую возможность, предоставляя специальный файл <em>/dev/null</em>, куда можно перенаправить вывод. Этот файл представляет системное устройство, называемое битоприемником (bit bucket), или мусорной корзиной, которое принимает любой ввод и ничего с ним не делает. Чтобы подавить вывод сообщений об ошибках, достаточно проделать следующее:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls -l /bin/usr 2&gt; /dev/null</strong></p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">/DEV/NULL в культуре unix</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">«Битоприемник» — старое понятие в Unix, благодаря своему универсализму широко используется в культуре Unix. Так, когда кто-то скажет, что посылает ваши комментарии в «dev null», вы теперь будете знать, что это означает. Еще больше примеров вы найдете в статье Википедии <a href="http://https://ru.wikipedia.org/wiki//dev/null"><em>https://ru.wikipedia.org/wiki//dev</em><em>/null</em></a>.</p>
+
+    <h3 xml:lang="ru-RU">Перенаправление стандартного ввода</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">До сих пор нам не встречались команды, использующие стандартный ввод (на самом деле они встречались, но мы подробнее обсудим их чуть ниже), поэтому нам нужно познакомиться с ними.</p>
+
+    <h4 xml:lang="ru-RU">cat — объединение файлов</h4>
+
+    <p class="Normal0" xml:lang="ru-RU">Команда <span class="command char-style-override-1">cat</span> читает содержимое одного или нескольких файлов и копирует его в стандартный вывод:</p>
+
+    <p class="list-one">cat [<em>файл</em>...]</p>
+
+    <p xml:lang="ru-RU">Часто команду <span class="command char-style-override-1">cat</span> можно считать аналогом команды <span class="command char-style-override-1">TYPE</span> в DOS. Она используется для вывода содержимого файлов без возможности постраничного просмотра. Например,</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>cat ls-output.txt</strong></p>
+
+    <p xml:lang="ru-RU">выведет содержимое файла <em>ls-output.txt</em>. Команда <span class="command char-style-override-1">cat</span> часто используется для вывода коротких текстовых файлов. Поскольку <span class="command char-style-override-1">cat</span> способна принимать сразу несколько файлов, она используется для их объединения. Представьте, что вы загрузили большой файл, разбитый на множество частей (в Usenet мультимедийные файлы часто разбиваются таким способом), и требуется объединить их в один файл. Если файлы имеют имена, такие как</p>
+
+    <p class="list-one">movie.mpeg.001 movie.mpeg.002 ... movie.mpeg.099</p>
+
+    <p xml:lang="ru-RU">их можно объединить следующей командой:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>cat movie.mpeg.0* &gt; movie.mpeg</strong></p>
+
+    <p xml:lang="ru-RU">Поскольку подстановка фактических имен взамен групповых символов всегда выполняется в порядке сортировки, аргументы окажутся расположенными в правильном порядке.</p>
+
+    <p xml:lang="ru-RU">Все это прекрасно, но при чем здесь стандартный ввод? Пока ни при чем, но давайте попробуем кое-что еще. Что получится, если вызвать <span class="command char-style-override-1">cat</span> без аргументов?</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>cat</strong></p>
+
+    <p xml:lang="ru-RU">Ничего не произошло — такое ощущение, что команда зависла. Однако в действительности команда делает именно то, что и предполагалось.</p>
+
+    <p xml:lang="ru-RU">Если вызвать <span class="command char-style-override-1">cat</span> без аргументов, она начнет читать данные со стандартного ввода, а поскольку стандартный ввод по умолчанию подключен к клавиатуре, получается, что команда ждет, пока вы что-нибудь напечатаете!</p>
+
+    <p xml:lang="ru-RU">Попробуйте так:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>cat</strong></p>
+
+    <p class="list-last"><strong>Съешь ещё этих мягких французских булок, да выпей чаю.</strong></p>
+
+    <p xml:lang="ru-RU">Затем нажмите комбинацию <span class="interface char-style-override-2">CTRL-D</span> (то есть, удерживая нажатой клавишу <span class="interface char-style-override-2">CTRL</span>, нажмите клавишу <span class="interface char-style-override-2">D</span>), чтобы сообщить команде <span class="command char-style-override-1">cat</span>, что достигнут <em>конец файла</em> (<em>end-of-file</em>,<em> EOF</em>) на стандартном вводе:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>cat</strong></p>
+
+    <p class="listing-body"><strong>Съешь ещё этих мягких французских булок, да выпей чаю.</strong></p>
+
+    <p class="list-last">Съешь ещё этих мягких французских булок, да выпей чаю.</p>
+
+    <p xml:lang="ru-RU">В отсутствие аргументов с именами файлов <span class="command char-style-override-1">cat</span> копирует содержимое стандартного ввода в стандартный вывод, поэтому-то мы и увидели, как она повторила введенную нами строку. Эту ее особенность можно использовать для создания коротких текстовых файлов. Представьте, что вам потребовалось создать файл с именем <em>eat_more.txt</em>, содержащий текст из примера, приведенного выше. Сделать это можно было бы так:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>cat &gt; </strong><strong>eat_more.txt</strong></p>
+
+    <p class="list-last"><strong>Съешь ещё этих мягких французских булок, да выпей чаю.</strong></p>
+
+    <p xml:lang="ru-RU">Введите команду, затем текст, который нужно поместить в файл, и не забудьте нажать комбинацию <span class="interface char-style-override-2">CTRL-D</span> в конце. Используя командную строку, мы реализовали самый простой в мире текстовый процессор! Чтобы увидеть результат, воспользуемся командой <span class="command char-style-override-1">cat</span> и скопируем файл в стандартный вывод:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>cat eat_more.txt</strong></p>
+
+    <p class="list-last">Съешь ещё этих мягких французских булок, да выпей чаю.</p>
+
+    <p xml:lang="ru-RU">Теперь, когда мы знаем, что команда <span class="command char-style-override-1">cat</span> может принимать данные не только из файлов, указанных в аргументах, но и со стандартного ввода, попробуем выполнить перенаправление стандартного ввода:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>cat &lt; eat_more.txt</strong></p>
+
+    <p class="list-last">Съешь ещё этих мягких французских булок, да выпей чаю.</p>
+
+    <p xml:lang="ru-RU">Используя оператор перенаправления <span class="command char-style-override-1">&lt;</span>, мы изменили источник данных для стандартного ввода с клавиатуры на файл <em>eat_more.txt</em>. Как видите, результат получился тот же, как если бы мы просто передали единственный аргумент с именем файла. Этот способ не имеет никаких преимуществ в сравнении с передачей простого аргумента, но он демонстрирует, как можно использовать файлы в роли источника данных для стандартного ввода. Другие команды находят лучшее применение стандартному вводу, в чем мы вскоре убедимся.</p>
+
+    <p xml:lang="ru-RU">Прежде чем двинуться дальше, прочитайте страницу справочного руководства (<span class="command char-style-override-1">man</span>) для команды <span class="command char-style-override-1">cat</span>, так как она имеет несколько очень интересных параметров.</p>
+
+    <h2 id="toc_marker-9-2" xml:lang="ru-RU">Конвейеры</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">«Умение» команд читать данные со стандартного ввода и выводить результаты в стандартный вывод используется механизмом командной оболочки, который называется <em>конвейером</em>. C помощью оператора конвейера<span class="Superscript"><a id="footnote-343439-6-backlink" class="footnote-link" href="#footnote-343439-6">6</a></span> <span class="command char-style-override-1">|</span> (вертикальная черта) стандартный вывод одной команды можно связать со стандартным вводом другой.</p>
+
+    <p class="list-one"><em>команда1</em> | <em>команда2</em></p>
+
+    <p xml:lang="ru-RU">Для демонстрации этого механизма нам понадобится несколько команд. Мы уже упоминали команду, которая может получать данные со стандартного ввода. Это команда <span class="command char-style-override-1">less</span>. Теперь используем <span class="command char-style-override-1">less</span> для постраничного отображения вывода любой команды, которая посылает свои результаты в стандартный вывод:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls -l /usr/bin | less</strong></p>
+
+    <p xml:lang="ru-RU">Это очень удобно! С помощью этого приема можно со всем комфортом исследовать вывод любой команды, посылающей результаты на стандартный вывод.</p>
+
+    <h3 xml:lang="ru-RU">Фильтры</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Конвейеры часто используются для выполнения сложных операций с данными. Они позволяют объединить вместе несколько команд. Часто команды, используемые таким способом, называют <em>фильтрами</em>. Фильтры принимают ввод, изменяют его определенным образом и выводят результат. Первый из таких фильтров, который мы опробуем, — команда <span class="command char-style-override-1">sort</span>. Представьте, что нам необходимо составить список всех выполняемых программ в каталогах <em>/bin</em> и <em>/usr/bin</em>, расположив их по алфавиту, и затем вывести его:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls /bin /usr/bin | sort | less</strong></p>
+
+    <p xml:lang="ru-RU">Поскольку в команде указаны два каталога (<em>/bin</em> и <em>/usr</em><em>/bin</em>), вывод команды <span class="command char-style-override-1">ls</span> будет состоять из двух сортированных списков, по одному для каждого каталога. Добавив команду <span class="command char-style-override-1">sort</span> в конвейер, мы изменили данные, чтобы получить единый сортированный список.</p>
+
+    <h3 xml:lang="ru-RU">uniq — поиск или удаление повторяющихся строк</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Команда <span class="command char-style-override-1">uniq</span> часто используется в комбинации с командой <span class="command char-style-override-1">sort</span>. <span class="command char-style-override-1">uniq</span> принимает сортированный список данных либо со стандартного ввода, либо из файла, имя которого можно передать в единственном аргументе (за подробностями обращайтесь к странице справочного руководства (<span class="command char-style-override-1">man</span>) для команды <span class="command char-style-override-1">uniq</span>), и по умолчанию удаляет повторяющиеся строки из списка. Поэтому, чтобы гарантировать отсутствие дубликатов в нашем списке (то есть любых программ с одинаковыми именами в каталогах <em>/bin</em> и <em>/usr/bin</em>), добавим <span class="command char-style-override-1">uniq</span> в конвейер:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls /bin /usr/bin | sort | uniq | less</strong></p>
+
+    <p xml:lang="ru-RU">В этом примере мы использовали <span class="command char-style-override-1">uniq</span> для удаления любых повторяющихся строк в выводе команды <span class="command char-style-override-1">sort</span>. Если бы нам потребовалось, наоборот, получить список дубликатов, мы добавили бы в команду <span class="command char-style-override-1">uniq</span> параметр <span class="command char-style-override-1">-d</span>:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls /bin /usr/bin | sort | uniq -d | less</strong></p>
+
+    <h3 xml:lang="ru-RU">wc — вывод числа строк, слов и байтов</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Команда <span class="command char-style-override-1">wc</span> (word count — счетчик слов) используется для подсчета числа строк, слов и байтов в файлах. Например:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>wc ls-output</strong><strong>.txt</strong></p>
+
+    <p class="list-last">7902 64566 503634 ls-output.txt</p>
+
+    <p xml:lang="ru-RU">В данном случае команда вывела три числа: число строк, число слов и число байтов в файле <em>ls-output.txt</em>. Подобно предыдущим командам, она может вызываться без аргументов, и в этом случае <span class="command char-style-override-1">wc</span> будет принимать данные со стандартного ввода. Параметр <span class="command char-style-override-1">-l</span> ограничивает вывод результатов только числом строк. Команду удобно использовать в конвейерах для подсчета: например, подсчитать число элементов в нашем сортированном списке можно так:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls /bin /usr/bin | sort | uniq | wc -l</strong></p>
+
+    <p class="listing-body">2728</p>
+
+    <h3 xml:lang="ru-RU">grep — поиск строк, соответствующих шаблону</h3>
+
+    <p class="Normal0" xml:lang="ru-RU"><span class="command char-style-override-1">grep</span> — очень мощная программа, она часто используется для поиска в файлах текста по шаблону:</p>
+
+    <p class="list-one">grep <em>шаблон</em> [<em>файл</em>...]</p>
+
+    <p xml:lang="ru-RU">Когда <span class="command char-style-override-1">grep</span> находит в файле совпадение с «шаблоном», она выводит строку с найденным совпадением. Шаблоны, используемые командой <span class="command char-style-override-1">grep</span> для поиска, могут быть очень сложными, но сейчас мы рассмотрим только поиск прямого совпадения с текстом. Более сложные шаблоны, которые называют <em>регулярными выражениями</em>, мы рассмотрим в главе 19.</p>
+
+    <p xml:lang="ru-RU">Допустим, что нам нужно найти все файлы в списке программ, которые имеют в своем имени последовательность символов <span class="command char-style-override-1">zip</span>. Результаты такого поиска могут подсказать нам, какие программы в системе имеют отношение к сжатию файлов. Сделать это можно так:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls /bin /usr/bin | sort | uniq | grep zip</strong></p>
+
+    <p class="listing-body">bunzip2</p>
+
+    <p class="listing-body">bzip2</p>
+
+    <p class="listing-body">gunzip</p>
+
+    <p class="listing-body">gzip</p>
+
+    <p class="listing-body">unzip</p>
+
+    <p class="listing-body">zip</p>
+
+    <p class="listing-body">zipcloak</p>
+
+    <p class="listing-body">zipgrep</p>
+
+    <p class="listing-body">zipinfo</p>
+
+    <p class="listing-body">zipnote</p>
+
+    <p class="list-last">zipsplit</p>
+
+    <p xml:lang="ru-RU">Команда <span class="command char-style-override-1">grep</span> имеет пару удобных параметров: <span class="command char-style-override-1">-i</span> требует от <span class="command char-style-override-1">grep</span> игнорировать регистр символов в процессе поиска (обычно поиск выполняется с учетом регистра символов), <span class="command char-style-override-1">-v</span> требует от <span class="command char-style-override-1">grep</span> выводить только строки, где совпадение с шаблоном не найдено.</p>
+
+    <h3 xml:lang="ru-RU">head/tail — вывод первых/последних строк из файлов</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Иногда требуется выводить не все результаты работы команды, а только несколько первых или несколько последних строк. Команда <span class="command char-style-override-1">head</span> выводит первые 10 строк из файла, а <span class="command char-style-override-1">tail</span> — последние 10 строк. По умолчанию обе команды выводят 10 строк текста, но это число можно изменить с помощью параметра <span class="command char-style-override-1">-n</span>:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>head -n 5 ls-output.txt</strong></p>
+
+    <p class="listing-body">total 343496</p>
+
+    <p class="listing-body">-rwxr-xr-x 1 root root&#160;&#160;&#160;&#160;&#160;&#160;&#160;31316 2011-12-05 08:58 [</p>
+
+    <p class="listing-body">-rwxr-xr-x 1 root root&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;8240 2011-12-09 13:39 411toppm</p>
+
+    <p class="listing-body">-rwxr-xr-x 1 root root&#160;&#160;&#160;&#160;&#160;&#160;111276 2011-11-26 14:27 a2p</p>
+
+    <p class="listing-body">-rwxr-xr-x 1 root root&#160;&#160;&#160;&#160;&#160;&#160;&#160;25368 2010-10-06 20:16 a52dec</p>
+
+    <p class="listing-body">[me@linuxbox ~]$ <strong>tail -n 5 ls-output.txt</strong></p>
+
+    <p class="listing-body">-rwxr-xr-x 1 root root&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;5234 2011-06-27 10:56 znew</p>
+
+    <p class="listing-body">-rwxr-xr-x 1 root root&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;691 2009-09-10 04:21 zonetab2pot.py</p>
+
+    <p class="listing-body">-rw-r--r-- 1 root root&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;930 2011-11-01 12:23 zonetab2pot.pyc</p>
+
+    <p class="listing-body">-rw-r--r-- 1 root root&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;930 2011-11-01 12:23 zonetab2pot.pyo</p>
+
+    <p class="list-last">lrwxrwxrwx 1 root root&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;6 2012-01-31 05:22 zsoelim -&gt; soelim</p>
+
+    <p xml:lang="ru-RU">Их также можно использовать в конвейерах:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls /usr/bin | tail -n 5</strong></p>
+
+    <p class="listing-body">znew</p>
+
+    <p class="listing-body">zonetab2pot.py</p>
+
+    <p class="listing-body">zonetab2pot.pyc</p>
+
+    <p class="listing-body">zonetab2pot.pyo</p>
+
+    <p class="list-last">zsoelim</p>
+
+    <p xml:lang="ru-RU">Команда <span class="command char-style-override-1">tail</span> позволяет наблюдать, как изменяется содержимое файла в режиме реального времени. Эту ее особенность удобно использовать для наблюдения за появлением новых записей в файлах журналов. В следующем примере демонстрируется наблюдение за файлом <em>messages</em> в каталоге <em>/var/log</em>. В некоторых дистрибутивах Linux для этого требуется обладать привилегиями суперпользователя, поскольку файл <em>/var/log/messages</em> может содержать секретную информацию.</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>tail -f /var/log/messages</strong></p>
+
+    <p class="listing-body">Feb 8 13:40:05 twin4 dhclient: DHCPACK from 192.168.1.1</p>
+
+    <p class="listing-body">Feb 8 13:40:05 twin4 dhclient: bound to 192.168.1.4 -- renewal in 1652 seconds.</p>
+
+    <p class="listing-body">Feb 8 13:55:32 twin4 mountd[3953]: /var/NFSv4/musicbox exported to both 192.168.1.0/24 and twin7.localdomain in 192.168.1.0/24,twin7.localdomain</p>
+
+    <p class="listing-body">Feb 8 14:07:37 twin4 dhclient: DHCPREQUEST on eth0 to 192.168.1.1 port 67</p>
+
+    <p class="listing-body">Feb 8 14:07:37 twin4 dhclient: DHCPACK from 192.168.1.1</p>
+
+    <p class="listing-body">Feb 8 14:07:37 twin4 dhclient: bound to 192.168.1.4 -- renewal in 1771 seconds.</p>
+
+    <p class="listing-body">Feb 8 14:09:56 twin4 smartd[3468]: Device: /dev/hda, SMART Prefailure Attribute: 8 Seek_Time_Performance changed from 237 to 236</p>
+
+    <p class="listing-body">Feb 8 14:10:37 twin4 mountd[3953]: /var/NFSv4/musicbox exported to both 192.168.1.0/24 and twin7.localdomain in 192.168.1.0/24,twin7.localdomain</p>
+
+    <p class="listing-body">Feb 8 14:25:07 twin4 sshd(pam_unix)[29234]: session opened for user me by (uid=0)</p>
+
+    <p class="list-last">Feb 8 14:25:36 twin4 su(pam_unix)[29279]: session opened for user root by me(uid=500)</p>
+
+    <p xml:lang="ru-RU">При вызове с параметром <span class="command char-style-override-1">-f</span> команда <span class="command char-style-override-1">tail</span> продолжает следить за файлом и при добавлении в конец этого файла новых строк немедленно выводит их. Так продолжается до тех пор, пока пользователь не нажмет комбинацию клавиш <span class="interface char-style-override-2">CTRL-C</span>.</p>
+
+    <h3 xml:lang="ru-RU">tee — чтение со стандартного ввода и запись в стандартный вывод и в файлы</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Linux предоставляет команду <span class="command char-style-override-1">tee</span>, которая создает Т-образное разветвление в конвейере. Программа <span class="command char-style-override-1">tee</span> читает данные со стандартного ввода и копирует их в стандартный вывод (чтобы дать возможность передать их дальше по конвейеру) и в один или несколько файлов. Это может пригодиться для сохранения промежуточных результатов обработки в конвейере. Ниже, продолжая один из предыдущих примеров, мы сохраним полный список файлов в каталогах в файле <em>ls.txt</em>, перед тем как он будет отфильтрован командой <span class="command char-style-override-1">grep</span>:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>ls /usr/bin | tee ls.txt | grep zip</strong></p>
+
+    <p class="listing-body">bunzip2</p>
+
+    <p class="listing-body">bzip2</p>
+
+    <p class="listing-body">gunzip</p>
+
+    <p class="listing-body">gzip</p>
+
+    <p class="listing-body">unzip</p>
+
+    <p class="listing-body">zip</p>
+
+    <p class="listing-body">zipcloak</p>
+
+    <p class="listing-body">zipgrep</p>
+
+    <p class="listing-body">zipinfo</p>
+
+    <p class="listing-body">zipnote</p>
+
+    <p class="list-last">zipsplit</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">linux развивает воображение</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Когда меня просят объяснить разницу между Windows и Linux, я часто привожу аналогию с игрушками.</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Windows — это как игровая приставка Game Boy. Вы идете в магазин и покупаете новенькую сияющую приставку с игрой в комплекте. Приносите ее домой, включаете и играете. Отличная графика, чудные звуки. Но спустя некоторое время игра надоедает. Вы опять идете в магазин и покупаете другую игру. Так повторяется снова и снова. Наконец, вы возвращаетесь в магазин и говорите человеку за прилавком: «Я хочу игру, которая делает это!» — а в ответ слышите, что такой игры не существует, потому что на нее нет спроса. Тогда вы говорите: «Но мне нужно всего лишь изменить вот это!» А продавец за прилавком говорит, что это невозможно. Игры продаются зашитыми в картриджи. И тут вы понимаете, что ваша приставка ограничена кругом игр, при создании которых кто-то другой решил за вас, что вам нужно, а что нет.</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Linux, напротив, можно сравнить с самым большим в мире конструктором. Вы открываете коробку и видите необозримую коллекцию деталей — огромное число железных планочек, болтиков, гаечек, шестеренок, колесиков и моторчиков и несколько рекомендаций по сборке. Вы начинаете играть. Сначала создаете один предлагаемый образец, затем другой. Затем вы обнаруживаете, что у вас появились собственные идеи новых конструкций и механизмов. И вам не нужно возвращаться в магазин, потому что у вас уже есть все, что требуется. Конструктор формирует ваше воображение. Он позволяет создать то, что вы хотите.</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Выбор игрушки, конечно же, дело глубоко личное, но признайтесь честно: какая игрушка принесла бы вам большее удовлетворение?</p>
+
+    <h2 id="toc_marker-9-3" xml:lang="ru-RU">Заключительное замечание</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Как обычно, загляните в документацию с описанием каждой команды, представленной в этой главе. Здесь были показаны только самые общие примеры их использования, и все они имеют множество интересных параметров. По мере накопления опыта работы в Linux мы увидим, что поддержка перенаправления в командной оболочке чрезвычайно полезна для решения специализированных задач. Многие команды используют стандартный ввод и стандартный вывод, и почти все программы командной строки используют стандартный вывод ошибок для отображения информационных сообщений.</p>
+
+    <div class="footnotes">
+       <div class="footnote">
+         <p class="Snoska" xml:lang="ru-RU"><a id="footnote-343439-6" class="footnote-anchor" href="#footnote-343439-6-backlink">6</a><span class="Superscript char-style-override-3"></span> Часто этот оператор называют также оператором канала. — <em class="char-style-override-9">Примеч. пер.</em></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
