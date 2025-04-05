@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Командная строка Linux</title>
+  <link href="../Styles/template.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body id="x978549602303" xml:lang="en-US">
+  <div class="Basic-Text-Frame">
+     <h1 id="toc_marker-15" xml:lang="ru-RU">11. Окружение</h1>
+
+    <p class="Normal0" xml:lang="ru-RU">Как обсуждалось выше, командная оболочка на протяжении всего сеанса работы использует массу информации, которая называется <em>окружением</em>. Данные, хранящиеся в окружении, используются программами для выяснения деталей конфигурации.</p>
+
+    <p xml:lang="ru-RU">Даже при том, что для хранения своих настроек большинство программ использует конфигурационные файлы, некоторые программы также учитывают значения, хранящиеся в окружении. Зная это, можно использовать окружение для настройки некоторых параметров командной оболочки.</p>
+
+    <p xml:lang="ru-RU">В этой главе мы будем работать со следующими командами:</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• printenv</span> — выводит часть или все окружение.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• set</span> — устанавливает параметры командной оболочки.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• export</span> — экспортирует окружение для программ, которые будут выполняться позднее.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• alias</span> — создает псевдоним команды.</p>
+
+    <h2 id="toc_marker-15-1" xml:lang="ru-RU">Что хранится в окружении?</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Командная оболочка хранит в окружении данные двух основных типов, хотя <span class="command char-style-override-1">bash</span> практически не делает различий между типами. Эти данные хранятся в <em>переменных окружения</em> и в <em>переменных командной оболочки</em>. Переменные командной оболочки — это фрагменты данных, инициализируемые командой <span class="command char-style-override-1">bash</span>, а переменные окружения — практически все остальное. Помимо переменных командная оболочка хранит также программируемые данные, а именно <em>псевдонимы</em> и <em>функции командной оболочки</em>. Мы уже познакомились с псевдонимами в главе 5, а о функциях (которые имеют отношение к сценариям командной оболочки) поговорим в части IV книги.</p>
+
+    <h3 xml:lang="ru-RU">Исследование окружения</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Увидеть, что хранится в окружении, можно при помощи встроенной в <span class="command char-style-override-1">bash</span> коман­ды <span class="command char-style-override-1">set</span> или программы <span class="command char-style-override-1">printenv</span>. Команда <span class="command char-style-override-1">set</span> выводит переменные обоих видов — командной оболочки и окружения, — тогда как <span class="command char-style-override-1">printenv</span> выводит только последние. Так как список содержимого окружения очень велик, его лучше просматривать, передавая вывод любой из команд по конвейеру в <span class="command char-style-override-1">less</span>:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>printenv | less</strong></p>
+
+    <p xml:lang="ru-RU">Запустив эту команду, вы должны увидеть нечто похожее:</p>
+
+    <p class="list-first">KDE_MULTIHEAD=false</p>
+
+    <p class="listing-body">SSH_AGENT_PID=6666</p>
+
+    <p class="listing-body">HOSTNAME=linuxbox</p>
+
+    <p class="listing-body">GPG_AGENT_INFO=/tmp/gpg-PdOt7g/S.gpg-agent:6689:1</p>
+
+    <p class="listing-body">SHELL=/bin/bash</p>
+
+    <p class="listing-body">TERM=xterm</p>
+
+    <p class="listing-body">XDG_MENU_PREFIX=kde-</p>
+
+    <p class="listing-body">HISTSIZE=1000</p>
+
+    <p class="listing-body">XDG_SESSION_COOKIE=6d7b05c65846c3eaf3101b0046bd2b00-1208521990.996705-1177056199</p>
+
+    <p class="listing-body">GTK2_RC_FILES=/etc/gtk-2.0/gtkrc:/home/me/.gtkrc-2.0:/home/me/.kde/share/<br/>
+
+ &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;config/gtkrc-2.0</p>
+
+    <p class="listing-body">GTK_RC_FILES=/etc/gtk/gtkrc:/home/me/.gtkrc:/home/me/.kde/share/config/gtkrc</p>
+
+    <p class="listing-body">GS_LIB=/home/me/.fonts</p>
+
+    <p class="listing-body">WINDOWID=29360136</p>
+
+    <p class="listing-body">QTDIR=/usr/lib/qt-3.3</p>
+
+    <p class="listing-body">QTINC=/usr/lib/qt-3.3/include</p>
+
+    <p class="listing-body">KDE_FULL_SESSION=true</p>
+
+    <p class="listing-body">USER=me</p>
+
+    <p class="list-last">LS_COLORS=no=00:fi=00:di=00;34:ln=00;36:pi=40;33:so=00;35:bd=40;33;01:<br/>
+
+ &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;cd=40;33;01:or=01;05;37;41:mi=01;05;37;41:ex=00;32:*.cmd=00;32:*.exe:</p>
+
+    <p xml:lang="ru-RU">Это список переменных окружения с их значениями. Например, в списке можно увидеть переменную с именем <span class="command char-style-override-1">USER</span>, содержащую значение <span class="command char-style-override-1">me</span>. Команда <span class="command char-style-override-1">printenv</span> может также вывести значение конкретной переменной:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>printenv USER</strong></p>
+
+    <p class="list-last">me</p>
+
+    <p xml:lang="ru-RU">Команда <span class="command char-style-override-1">set</span> при вызове без параметров и аргументов выводит переменные обоих типов — командной оболочки и окружения, — а также все объявленные функции командной оболочки.</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>set | less</strong></p>
+
+    <p xml:lang="ru-RU">В отличие от <span class="command char-style-override-1">printenv</span> она сортирует вывод в алфавитном порядке.</p>
+
+    <p xml:lang="ru-RU">Получить значение единственной переменной можно также с помощью команды <span class="command char-style-override-1">echo</span>, например:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>echo $HOME</strong></p>
+
+    <p class="list-last">/home/me</p>
+
+    <p xml:lang="ru-RU">Единственный элемент окружения, который не выводится командами <span class="command char-style-override-1">set</span> и <span class="command char-style-override-1">printenv</span>, это псевдонимы. Чтобы вывести список псевдонимов, используйте коман­ду <span class="command char-style-override-1">alias</span> без аргументов:</p>
+
+    <p class="listing-body">[me@linuxbox ~]$ <strong>alias</strong></p>
+
+    <p class="listing-body">alias l.='ls -d .* --color=tty'</p>
+
+    <p class="listing-body">alias ll='ls -l --color=tty'</p>
+
+    <p class="listing-body">alias ls='ls --color=tty'</p>
+
+    <p class="listing-body">alias vi='vim'</p>
+
+    <p class="listing-body">alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --showtilde'</p>
+
+    <h3 xml:lang="ru-RU">Некоторые интересные переменные</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Окружение содержит довольно много переменных, и хотя ваше окружение может отличаться от представленного здесь, вы почти наверняка увидите у себя переменные, перечисленные в табл. 11.1.</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 11.1.</strong> Переменные окружения</p>
+
+    <table id="table-40" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <thead>      <tr>      <td class="Cell-Style-2 cell-style-override-7">       <p class="Tabl-head" xml:lang="ru-RU">Переменная</p>
+
+</td>
+
+      <td class="Cell-Style-2 cell-style-override-7">       <p class="Tabl-head" xml:lang="ru-RU">Содержит</p>
+
+</td>
+
+</tr>
+
+</thead>
+
+      <tbody>      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">DISPLAY</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Имя вашего дисплея, если вы работаете в графическом окружении. Обычно это <span class="command char-style-override-4">:0</span>, что означает первый дисплей, сгенерированный X сервером</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">EDITOR</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Имя программы, используемой в качестве текстового редактора</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">SHELL</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Имя программы командной оболочки</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">HOME</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Путь к домашнему каталогу</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">LANG</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Определяет набор символов и порядок сортировки для вашего языка</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">OLD_PWD</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Предыдущий рабочий каталог</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">PAGER</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Имя программы для постраничного просмотра. Часто имеет значение <em>/usr/bin/less</em></p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">PATH</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Список каталогов, разделенных двоеточием, в которых производится поиск выполняемых программ по их именам</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">PS1</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Строка приглашения к вводу № 1. Определяет содержимое строки приглашения к вводу в командной оболочке. Как будет показано позднее, эту строку можно менять весьма существенно</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">PWD</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Текущий рабочий каталог</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">TERM</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span>Тип терминала. Unix</span><span>-подобные системы поддерживают множество протоколов для работы с терминалами; эта переменная определяет протокол, который будет использоваться при обмене данными с эмулятором терминала</span></p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">TZ</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Определяет часовой пояс. В большинстве Unix-подобных систем внутренние часы компьютера устанавливаются в <em>координированное универсальное время</em> (Coordinated Universal Time, UTC), а при выводе значения времени к нему добавляется смещение, определяемое этой переменной</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">USER</span></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-7">       <p class="Tabl-body" xml:lang="ru-RU">Имя пользователя</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <p xml:lang="ru-RU">Не волнуйтесь, если какие-то переменные у вас отсутствуют. Они могут отличаться в разных дистрибутивах.</p>
+
+    <h2 id="toc_marker-15-2" xml:lang="ru-RU">Как устанавливается окружение?</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Когда мы входим в систему, запускается программа <span class="command char-style-override-1">bash</span> и читает содержимое серии конфигурационных сценариев, называемых <em>файлами запуска</em> (startup files), где определяется окружение по умолчанию, общее для всех пользователей. Затем она читает дополнительные файлы запуска в вашем домашнем каталоге, где определяется личное окружение. Точная последовательность обработки файлов зависит от типа запускаемого сеанса командной оболочки.</p>
+
+    <h3 xml:lang="ru-RU">Оболочка входа и простая оболочка</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Сеансы работы с командной оболочкой входа могут быть двух типов: сеанс командной оболочки входа (login shell session) и сеанс простой командной оболочки (non-login shell session).</p>
+
+    <p xml:lang="ru-RU"><em>Сеанс командной оболочки входа</em> (login shell session) — это сеанс, который на входе запрашивает имя пользователя и пароль, например, когда вход выполняется в виртуальной консоли. <em>Сеанс простой командной оболочки</em> (non-login shell session) обычно начинается, когда запускается терминал в графическом окружении.</p>
+
+    <p xml:lang="ru-RU">Командные оболочки входа читают один или несколько файлов запуска, перечисленных в табл. 11.2.</p>
+
+    <p xml:lang="ru-RU">Обычные сеансы командной оболочки читают файлы, перечисленные в табл. 11.3.</p>
+
+    <p xml:lang="ru-RU">Помимо чтения настроек из файлов запуска, перечисленных выше, обычные командные оболочки наследуют окружение от родительского процесса, каковым обычно является командная оболочка входа.</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 11.2.</strong> Файлы запуска для сеансов командной оболочки входа</p>
+
+    <table id="table-41" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <tbody>      <tr>      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Файл</p>
+
+</td>
+
+      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Содержит</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/etc/profile</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Общесистемный конфигурационный сценарий, настройки из которого применяются для всех пользователей</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>~/.bash_profile</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Личный пользовательский файл запуска. Может использоваться для расширения и/или переопределения общесистемных настроек</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>~/.bash_login</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Если файл <em>~/.bash</em><em>_profile</em> присутствует в домашнем каталоге, <span class="command char-style-override-4">bash</span> пытается прочитать его</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>~/.profile</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Если в домашнем каталоге нет ни <em>~/.bash_profile</em>, ни <em>~/.bash_login</em>, <span class="command char-style-override-4">bash</span> пытается прочитать этот файл. Используется по умолчанию в дистрибутивах на основе Debian, таких как Ubuntu</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 11.3.</strong> Файлы запуска для обычных сеансов командной оболочки</p>
+
+    <table id="table-42" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <tbody>      <tr>      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Файл</p>
+
+</td>
+
+      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Содержит</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/etc/bash.bashrc</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Общесистемный конфигурационный сценарий, настройки из которого применяются для всех пользователей</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>~/.bashrc</em></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Личный пользовательский файл запуска. Может использоваться для расширения и/или переопределения общесистемных настроек</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <p xml:lang="ru-RU">Загляните в свою систему и посмотрите, какие файлы запуска у вас имеются. Помните: поскольку большинство имен файлов из перечисленных выше начинается с точки (такие файлы считаются скрытыми), при использовании команды <span class="command char-style-override-1">ls</span> ей необходимо передавать параметр <span class="command char-style-override-1">-a</span>.</p>
+
+    <p xml:lang="ru-RU">С точки зрения обычного пользователя, файл <em>~/.bashrc</em> является, пожалуй, самым важным файлом запуска, потому что его содержимое читается практически всегда. Обычные командные оболочки читают его по умолчанию, а большинство файлов запуска для командных оболочек входа написаны так, что оболочка также прочитает файл <em>~/.bashrc</em>.</p>
+
+    <h3 xml:lang="ru-RU">Что находится в файлах запуска?</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Если заглянуть внутрь типичного файла <em>.bash_profile</em> (взятого из системы CentOS-4), можно увидеть следующее:</p>
+
+    <p class="list-first"># .bash_profile</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body"># Загрузить псевдонимы и функции</p>
+
+    <p class="listing-body">if [ -f ~/.bashrc ]; then</p>
+
+    <p class="listing-body">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;. ~/.bashrc</p>
+
+    <p class="listing-body">fi</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body"># Определение пользовательского окружения и запуск программ</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">PATH=$PATH:$HOME/bin</p>
+
+    <p class="list-last">export PATH</p>
+
+    <p xml:lang="ru-RU">Строки, начинающиеся с <span class="command char-style-override-1">#</span>, — это <em>комментарии,</em> они не читаются командной оболочкой, а предназначены для человека. Первый интересный фрагмент начинается в четвертой строке:</p>
+
+    <p class="list-first">if [ -f ~/.bashrc ]; then</p>
+
+    <p class="listing-body">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;. ~/.bashrc</p>
+
+    <p class="list-last">fi</p>
+
+    <p xml:lang="ru-RU">Этот код называется <em>составной условной командой</em>, полное описание которой будет дано в части IV книги, где обсуждается программирование на языке командной оболочки, а пока приведем ее перевод на человеческий язык:</p>
+
+    <p class="list-first">Если файл "~/.bashrc" существует, тогда</p>
+
+    <p class="list-last">&#160;&#160;&#160;&#160;&#160;прочитать файл "~/.bashrc" file.</p>
+
+    <p xml:lang="ru-RU">Как видите, этот фрагмент вынуждает командную оболочку входа прочитать содержимое файла <em>.bashrc</em>. Следующая операция, выполняемая в файле запуска, имеет отношение к переменной <span class="command char-style-override-1">PATH</span>.</p>
+
+    <p xml:lang="ru-RU">Приходилось ли вам задумываться над тем, как командная оболочка находит коман­ды, которые вводятся в командной строке? Например, когда мы вводим <span class="command char-style-override-1">ls</span>, командная оболочка не обыскивает весь компьютер целиком, чтобы найти <em>/bin/ls</em> (полный путь к команде <span class="command char-style-override-1">ls</span>), а просматривает только каталоги, перечисленные в переменной <span class="command char-style-override-1">PATH</span>.</p>
+
+    <p xml:lang="ru-RU">Переменная <span class="command char-style-override-1">PATH</span> часто (но не всегда, в зависимости от дистрибутива) устанавливается в файле запуска <em>/etc/profile</em>, как показано ниже:</p>
+
+    <p class="list-one">PATH=$PATH:$HOME/bin</p>
+
+    <p xml:lang="ru-RU">Здесь в конец списка в переменной <span class="command char-style-override-1">PATH</span> добавляется каталог <em>$HOME/bin</em>. Этот код может служить примером использования механизма подстановки параметров, с которым мы познакомились в главе 7. Для демонстрации попробуйте выполнить следующий пример:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>foo="This is some"</strong></p>
+
+    <p class="listing-body">[me@linuxbox ~]$ <strong>echo $foo</strong></p>
+
+    <p class="listing-body">This is some</p>
+
+    <p class="listing-body">[me@linuxbox ~]$ <strong>foo=$foo" text."</strong></p>
+
+    <p class="listing-body">[me@linuxbox ~]$ <strong>echo $foo</strong></p>
+
+    <p class="list-last">This is some text.</p>
+
+    <p xml:lang="ru-RU">Используя этот прием, можно добавлять текст в конец содержимого переменной.</p>
+
+    <p xml:lang="ru-RU">При добавлении строки <span class="command char-style-override-1">$</span><span class="command char-style-override-1">HOME/bin</span> в конец содержимого переменной <span class="command char-style-override-1">PATH</span> происходит добавление каталога <em>$HOME/bin</em> в список каталогов, где будет выполняться поиск вводимых команд. Это означает, что если мы решим создать каталог в своем домашнем каталоге для хранения личных программ, командная оболочка уже будет готова к этому. Нам останется только дать имя <em>bin</em> этому каталогу.</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">ПРИМЕЧАНИЕ</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Многие дистрибутивы предоставляют настройки <span class="command char-style-override-1">PATH</span> по умолчанию. Некоторые дистрибутивы на основе Debian, такие как Ubuntu, проверяют наличие каталога <em>~/bin</em> во время входа, и если он имеется, динамически добавляют его в переменную <span class="command char-style-override-1">PATH</span>.</p>
+
+    <p xml:lang="ru-RU">Наконец, у нас осталась еще одна строка:</p>
+
+    <p class="list-one">export PATH</p>
+
+    <p xml:lang="ru-RU">Команда <span class="command char-style-override-1">export</span> указывает командной оболочке сделать содержимое переменной <span class="command char-style-override-1">PATH</span> доступным дочерним процессам этой оболочки.</p>
+
+    <h2 id="toc_marker-15-3" xml:lang="ru-RU">Изменение окружения</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Теперь, зная, где находятся файлы запуска и что они содержат, мы можем изменить их, чтобы настроить окружение.</p>
+
+    <h3 xml:lang="ru-RU">Какие файлы следует изменять?</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Как правило, изменение содержимого переменой <span class="command char-style-override-1">PATH</span> или определение дополнительных переменных окружения следует производить в файле <em>.bash_profile</em> (или эквивалентном ему, в зависимости от дистрибутива, — например, в Ubuntu используется файл <em>.profile</em>). Во всех остальных случаях изменения должны производиться в <em>.bashrc</em>. Если вы не системный администратор и вам не требуется вносить изменения, касающиеся всех пользователей системы, изменяйте только файлы в своем домашнем каталоге. Конечно, можно изменять файлы в <em>/etc</em>, такие как <em>profile</em>, и во многих случаях в этом есть определенный смысл, но давайте пока избегать рискованных действий.</p>
+
+    <h3 xml:lang="ru-RU">Текстовые редакторы</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Для редактирования (то есть изменения) файлов запуска командной оболочки, а также большинства других конфигурационных файлов в системе используется программа, которая называется <em>текстовым редактором</em>. Текстовый редактор, подобно текстовому процессору, позволяет редактировать слова на экране, перемещая курсор. От текстового процессора эта программа отличается только поддержкой простого текста и нередко наличием особенностей, необходимых при разработке программ. Текстовые редакторы — основной инструмент, используемый программистами для создания программного кода и системными администраторами для управления конфигурационными файлами, определяющими настройки системы.</p>
+
+    <p xml:lang="ru-RU">Для Linux существует огромное число текстовых редакторов; в вашей системе почти наверняка установлено несколько из них. Почему было создано так много редакторов? Вероятно, потому, что программистам нравится писать их, а так как программисты очень активно пользуются редакторами, они стремятся воплотить в них свои взгляды на то, как должны работать эти редакторы.</p>
+
+    <p xml:lang="ru-RU">Текстовые редакторы делятся на две основные категории: с графическим и с текстовым интерфейсом. Оба окружения рабочего стола, GNOME и KDE, включают несколько популярных редакторов с графическим интерфейсом. В состав GNOME входит редактор с названием <span class="command char-style-override-1">gedit</span>, который в меню GNOME обычно называется <span class="interface char-style-override-2">Text Editor</span> (Текстовый редактор). Вместе с KDE обычно распространяется три редактора (в порядке увеличения сложности): <span class="command char-style-override-1">kedit</span>, <span class="command char-style-override-1">kwrite</span> и <span class="command char-style-override-1">kate</span>.</p>
+
+    <p xml:lang="ru-RU">Существует множество редакторов с текстовым интерфейсом. Наиболее популяр­ные из них, с которыми, возможно, вы столкнетесь: <span class="command char-style-override-1">nano</span>, <span class="command char-style-override-1">vi</span> и <span class="command char-style-override-1">emacs</span>. Редактор <span class="command char-style-override-1">nano</span> — простой в использовании редактор, созданный как замена редактору <span class="command char-style-override-1">pico</span>, поставляемому в составе пакета программ для работы с электронной почтой PINE. Редактор <span class="command char-style-override-1">vi</span> (в большинстве систем Linux его замещает программа <span class="command char-style-override-1">vim</span>, название которой является сокращением от <em>Vi IM</em><em>proved</em> (Vi улучшенный)) — традиционный редактор для Unix-подобных систем. Подробнее о нем рассказывается в главе 12. Редактор <span class="command char-style-override-1">emacs</span> был написан Ричардом Столлманом (Richard Stallman). Это невероятная, универсальная среда программирования, построенная по принципу «все в одном». Но, несмотря на свою доступность, он редко устанавливается по умолчанию в большинстве систем Linux.</p>
+
+    <h3 xml:lang="ru-RU">Использование текстового редактора</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Любой текстовый редактор можно запустить из командной строки, введя имя редактора и имя файла, который требуется отредактировать. Если указанный файл не существует, редактор решит, что вы хотите создать новый файл. Ниже приводится пример использования <span class="command char-style-override-1">gedit</span>:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>gedit some_file</strong></p>
+
+    <p xml:lang="ru-RU">Эта команда запустит текстовый редактор <span class="command char-style-override-1">gedit</span> и загрузит в него файл с именем <em>some_file</em>, если таковой существует.</p>
+
+    <p xml:lang="ru-RU">Все текстовые редакторы с графическим интерфейсом имеют интуитивно понятный интерфейс, поэтому мы не будем описывать их здесь. Вместо этого сосредоточимся на редакторе с текстовым интерфейсом <span class="command char-style-override-1">nano</span>. Давайте запустим <span class="command char-style-override-1">nano</span> и внесем изменения в файл <em>.bashrc</em>. Но перед этим поговорим немного о мерах предосторожности. Всякий раз, собираясь редактировать важный конфигурационный файл, создайте сначала его резервную копию. Это обезопасит вас, если в процессе редактирования вы безнадежно испортите содержимое файла. Чтобы создать резервную копию файла <em>.bashrc</em>, выполните следующую команду:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>cp .bashrc .bashrc.bak</strong></p>
+
+    <p xml:lang="ru-RU">Неважно, как вы назовете файл с резервной копией; просто дайте ему такое имя, чтобы было понятно, что это за файл. Наиболее часто для имен файлов с резервными копиями используются расширения <em>.bak</em>, <em>.sav</em>, <em>.old</em> и <em>.orig</em>. Да, и не забудьте, что команда <span class="command char-style-override-1">cp</span> <em>без лишних вопросов затирает существующие файлы</em>.</p>
+
+    <p xml:lang="ru-RU">Теперь, когда резервная копия создана, можно запускать редактор:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>nano .bashrc</strong></p>
+
+    <p xml:lang="ru-RU">После запуска <span class="command char-style-override-1">nano</span> вы увидите на экране примерно такую картину:</p>
+
+    <p class="list-first">&#160;&#160;GNU nano 2.0.3&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;File: .bashrc</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body"># .bashrc</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body"># Загрузить глобальные определения</p>
+
+    <p class="listing-body">if [ -f /etc/bashrc ]; then</p>
+
+    <p class="listing-body">&#160;&#160;&#160;&#160;. /etc/bashrc</p>
+
+    <p class="listing-body">fi</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body"># Пользовательские псевдонимы и функции</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;[ Read 8 lines ]</p>
+
+    <p class="listing-body">^G Get Help^O WriteOut^R Read Fil^Y Prev Pag^K Cut Text^C Cur Pos</p>
+
+    <p class="list-last">^X Exit&#160;&#160;&#160;&#160;^J Justify ^W Where Is^V Next Pag^U UnCut Te^T To Spell</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">ПРИМЕЧАНИЕ</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Если в вашей системе не установлен редактор <span class="command char-style-override-1">nano</span>, можете вместо него использовать редактор с графическим интерфейсом.</p>
+
+    <p xml:lang="ru-RU">Экран редактора делится на три части: заголовок в верхней части, область редактирования текста в середине и меню команд внизу. Так как <span class="command char-style-override-1">nano</span> проектировался как замена текстового редактора, входящего в состав почтового клиента, он не обладает развитыми функциями редактирования.</p>
+
+    <p xml:lang="ru-RU">Первая команда, которую нужно узнать при использовании любого редактора, — это команда выхода из программы. Чтобы покинуть <span class="command char-style-override-1">nano</span>, нажмите <span class="interface char-style-override-2">CTRL+X</span>. Эта ­команда присутствует в меню, в нижней части экрана. Нотация <span class="interface char-style-override-2">^X</span> означает <span class="interface char-style-override-2">CTRL+X</span>. Это распространенная форма записи управляющих комбинаций, используемая во многих программах.</p>
+
+    <p xml:lang="ru-RU">Вторая команда, которую следует знать, — как сохранить изменения. В <span class="command char-style-override-1">nano</span> сохранение выполняется нажатием <span class="interface char-style-override-2">CTRL+O</span>. Теперь, обладая новыми знаниями, приступим к правке текста. Используя клавишу со стрелкой вниз и/или <span class="interface char-style-override-2">Page Down</span>, переместите курсор в конец файла и добавьте в <em>.bashrc</em> следующие строки:</p>
+
+    <p class="list-first">umask 0002</p>
+
+    <p class="listing-body">export HISTCONTROL=ignoredups</p>
+
+    <p class="listing-body">export HISTSIZE=1000</p>
+
+    <p class="listing-body">alias l.='ls -d .* --color=auto'</p>
+
+    <p class="listing-body">alias ll='ls -l --color=auto'</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">ПРИМЕЧАНИЕ</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Ваш дистрибутив уже может включать некоторые из этих строк, но если повторить их, это ничему не навредит.</p>
+
+    <p xml:lang="ru-RU">Эти изменения описаны в табл. 11.4.</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 11.4.</strong> Дополнения в файле .bashrc</p>
+
+    <table id="table-43" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <thead>      <tr>      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Строка</p>
+
+</td>
+
+      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Значение</p>
+
+</td>
+
+</tr>
+
+</thead>
+
+      <tbody>      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">umask 0002</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Определяет маску <span class="command char-style-override-4">umask</span> для устранения проблемы с общими каталогами, обсуждавшейся в главе 9</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">export HISTCONTROL=ignoredups</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Предписывает механизму истории командной оболочки игнорировать команду, если непосредственно перед ней точно такая же команда была записана в историю</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">export HISTSIZE=1000</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Увеличивает историю команд с 500 строк по умолчанию до 1000</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">alias l.='ls -d .* --color=auto'</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Создает новую команду с именем <span class="command char-style-override-4">l.</span>, которая выводит все элементы каталога с именами, начинающимися с точки</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span class="command char-style-override-4">alias ll='ls -l –color=auto'</span></p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Создает новую команду с именем <span class="command char-style-override-4">ll</span>, которая выводит содержимое каталога в подробном формате</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <p xml:lang="ru-RU">Как видите, догадаться о назначении многих новых строк непросто, поэтому нелишним будет снабдить их комментариями, чтобы прояснить смысл для тех, кто будет читать файл <em>.bashrc</em>. Используя редактор, добавьте пояснения, как показано ниже:</p>
+
+    <p class="list-first"># Изменить маску umask, чтобы упростить использование общих каталогов</p>
+
+    <p class="listing-body">umask 0002</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body"># Игнорировать дубликаты в истории команд и увеличить</p>
+
+    <p class="listing-body"># объем истории до 1000 строк</p>
+
+    <p class="listing-body">export HISTCONTROL=ignoredups</p>
+
+    <p class="listing-body">export HISTSIZE=1000</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body"># Добавить несколько удобных псевдонимов</p>
+
+    <p class="listing-body">alias l.='ls -d .* --color=auto'</p>
+
+    <p class="list-last">alias ll='ls -l --color=auto'</p>
+
+    <p xml:lang="ru-RU">Так намного лучше! Закончив правку, нажмите <span class="interface char-style-override-2">CTRL+O</span>, чтобы сохранить измененный файл <em>.bashrc</em>, и <span class="interface char-style-override-2">CTRL+X</span>, чтобы выйти из <span class="command char-style-override-1">nano</span>.</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">важность комментариев</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Всякий раз, изменяя конфигурационные файлы, добавляйте краткие комментарии, описывающие эти изменения. Вне всяких сомнений, вы будете помнить назначение своих изменений завтра, но вспомните ли вы об этом через шесть месяцев? Сделайте себе подарок, добавьте несколько комментариев. Кроме того, хорошо бы завести файл журнала и в нем фиксировать произведенные изменения.</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Комментарии в сценариях на языке командной оболочки и в файлах запуска начинаются с символа <span class="command char-style-override-1">#</span>. В других конфигурационных файлах для этой цели могут использоваться другие символы. Комментарии можно найти в большинстве конфигурационных файлов. Используйте их как руководство.</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">В конфигурационных файлах вам часто будут встречаться <em>закомментированные</em> строки, чтобы предотвратить их влияние на соответствующую программу. Это делается с целью показать читателю возможные варианты настройки или примеры правильного синтаксиса оформления настроек. Например, файл <em>.bashrc</em> в Ubuntu 8.04 содержит следующие строки:</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU"><span class="command char-style-override-1"># несколько других псевдонимов команды ls</span></p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU"><span class="command char-style-override-1">#alias ll='ls -l'</span></p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU"><span class="command char-style-override-1">#alias la='ls -A'</span></p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU"><span class="command char-style-override-1">#alias l='ls -CF'</span></p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Последние три строки — это допустимые определения псевдонимов, только закомментированные. Если удалить начальные символы <span class="command char-style-override-1">#</span> из этих трех строк (это называется <em>раскомментировать</em>), псевдонимы будут активированы. Напротив, если добавить символ <span class="command char-style-override-1">#</span> в начало строки, можно деактивировать конфигурационную строку, сохранив информацию, хранящуюся в ней.</p>
+
+    <h3 xml:lang="ru-RU">Активация изменений</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Изменения, произведенные в файле <em>.</em><em>bashrc</em>, не вступят в силу, пока вы не закроете терминал и не запустите новый, потому что оболочка читает содержимое файла <em>.bashrc</em> только в начале сеанса. Однако существует возможность принудить <span class="command char-style-override-1">bash</span> повторно прочитать измененный файл <em>.bashrc</em> следующей командой:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>source .bashrc</strong></p>
+
+    <p xml:lang="ru-RU">После этого изменения должны вступить в силу. Попробуйте, например, один из новых псевдонимов:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ll</strong></p>
+
+    <h2 id="toc_marker-15-4" xml:lang="ru-RU">Заключительное замечание</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">В этой главе вы приобрели основные навыки правки конфигурационных файлов в текстовом редакторе. По мере чтения страниц справочного руководства (<span class="command char-style-override-1">man</span>) для команд обращайте внимание на переменные окружения, поддерживаемые коман­дами. Эта информация может оказаться весьма ценной. В следующих главах вы познакомитесь с еще одним мощным инструментом — функциями командной оболочки, которые также можно включать в файлы запуска <span class="command char-style-override-1">bash</span>, чтобы расширить арсенал собственных команд.</p>
+  </div>
+</body>
+</html>
