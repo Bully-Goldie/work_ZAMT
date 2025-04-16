@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Командная строка Linux</title>
+  <link href="../Styles/template.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body id="x978549602303" xml:lang="en-US">
+  <div class="Basic-Text-Frame">
+     <h1 id="toc_marker-20" xml:lang="ru-RU">15. Устройства хранения</h1>
+
+    <p class="Normal0" xml:lang="ru-RU">В предыдущих главах мы познакомились с приемами работы с данными на уровне файлов. В этой главе мы будем рассматривать данные на уровне устройств. Linux обладает удивительными возможностями работы с устройствами хранения, такими как жесткие диски, сетевые хранилища или виртуальные устройства хранения, например RAID (redundant array of independent disks — избыточный массив из независимых дисков) и LVM (logical volume manager — диспетчер логических томов).</p>
+
+    <p xml:lang="ru-RU">Однако поскольку эта книга не о системном администрировании, мы не будем пытаться охватить эту тему во всех подробностях, а всего лишь познакомимся с некоторыми понятиями и ключевыми командами, которые используются для управления устройствами хранения данных.</p>
+
+    <p xml:lang="ru-RU">Для выполнения упражнений к этой главе нам понадобится флеш-диск (флешка), подключаемый к порту USB компьютера, диск CD-RW (для систем, оборудованных пишущим приводом CD-ROM) и такой раритет, как гибкий диск (опять же, если система оборудована этим устройством).</p>
+
+    <p xml:lang="ru-RU">Мы познакомимся со следующими командами:</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• </span><span class="command char-style-override-1">mount</span> — монтирует файловые системы.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• </span><span class="command char-style-override-1">umount</span> — размонтирует файловые системы.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• </span><span class="command char-style-override-1">fdisk</span> — инструмент для работы с таблицей разделов.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• </span><span class="command char-style-override-1">fsck</span> — проверяет и восстанавливает файловые системы.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• </span><span class="command char-style-override-1">fdformat</span> — форматирует гибкий диск.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• </span><span class="command char-style-override-1">mkfs</span> — создает файловые системы.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• </span><span class="command char-style-override-1">dd</span> — выполняет запись данных блоками непосредственно в устройство.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• </span><span class="command char-style-override-1">genisoimage</span> (<span class="command char-style-override-1">mkisofs</span>) — создает файл образа ISO 9660.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• </span><span class="command char-style-override-1">wodim</span> (<span class="command char-style-override-1">cdrecord</span>) — записывает данные на оптический носитель.</p>
+
+    <p class="ListBul" xml:lang="ru-RU"><span class="command char-style-override-1">• md5sum</span> — вычисляет контрольную сумму MD5.</p>
+
+    <h2 id="toc_marker-20-1" xml:lang="ru-RU">Монтирование и размонтирование устройств хранения</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Последние достижения Linux на настольных компьютерах сделали управление устройствами хранения чрезвычайно простым для обычных пользователей. Достаточно подключить устройство к компьютеру, и оно тут же готово к работе. Раньше (года этак до 2004-го) все необходимые операции требовалось выполнять вручную. В серверных системах эти операции по большей части все еще выполняются вручную, потому что серверы часто предъявляют особые требования к устройствам хранения и настройкам.</p>
+
+    <p xml:lang="ru-RU">Первый шаг в управлении устройствами хранения — подключение самого устройства к дереву файловой системы. Этот процесс называется <em>монтированием</em> и позволяет устройству участвовать в работе операционной системы. Как рассказывалось в главе 2, Unix-подобные операционные системы, такие как Linux, поддерживают единое дерево файловой системы, к разным точкам которого подключаются дополнительные устройства. Этот подход отличается от используемого в MS-DOS и Windows, где каждому устройству соответствует отдельное дерево файлов и каталогов (например, <em>C:\</em>, <em>D:\</em> и т.д.).</p>
+
+    <p xml:lang="ru-RU">В файле с именем <em>/etc/fstab</em> перечисляются устройства (обычно разделы жесткого диска), монтируемые на этапе загрузки. Ниже приводится пример содержимого <em>/etc/fstab</em> из системы Fedora 7:</p>
+
+    <p class="list-first">LABEL=/12&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ext3&#160;&#160;&#160;&#160;defaults&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;1 1</p>
+
+    <p class="listing-body">LABEL=/home&#160;&#160;&#160;&#160;&#160;&#160;/home&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ext3&#160;&#160;&#160;&#160;defaults&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;1 2</p>
+
+    <p class="listing-body">LABEL=/boot&#160;&#160;&#160;&#160;&#160;&#160;/boot&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ext3&#160;&#160;&#160;&#160;defaults&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;1 2</p>
+
+    <p class="listing-body">tmpfs&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/dev/shm&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;tmpfs&#160;&#160;&#160;defaults&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0 0</p>
+
+    <p class="listing-body">devpts&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/dev/pts&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;devpts&#160;&#160;gid=5,mode=620&#160;&#160;0 0</p>
+
+    <p class="listing-body">sysfs&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/sys&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;sysfs&#160;&#160;&#160;defaults&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0 0</p>
+
+    <p class="listing-body">proc&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/proc&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;proc&#160;&#160;&#160;&#160;defaults&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0 0</p>
+
+    <p class="list-last">LABEL=SWAP-sda3&#160;&#160;swap&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;swap&#160;&#160;&#160;&#160;defaults&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0 0</p>
+
+    <p xml:lang="ru-RU">Большинство файловых систем из перечисленных в приведенном примере являются виртуальными, и наше обсуждение к ним неприменимо. Наибольший интерес для нас в рамках исследования данной темы представляют первые три:</p>
+
+    <p class="list-first">LABEL=/12&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ext3&#160;&#160;&#160;&#160;defaults&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;1 1</p>
+
+    <p class="listing-body">LABEL=/home&#160;&#160;&#160;&#160;&#160;&#160;/home&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ext3&#160;&#160;&#160;&#160;defaults&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;1 2</p>
+
+    <p class="list-last">LABEL=/boot&#160;&#160;&#160;&#160;&#160;&#160;/boot&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;ext3&#160;&#160;&#160;&#160;defaults&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;1 2</p>
+
+    <p xml:lang="ru-RU">Это разделы жесткого диска. Каждая строка включает шесть полей, описание которых приводится в табл. 15.1.</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 15.1.</strong> Поля в файле /etc/fstab</p>
+
+    <table id="table-67" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <tbody>      <tr>      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Поле</p>
+
+</td>
+
+      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Содержит</p>
+
+</td>
+
+      <td class="Cell-Style-2">       <p class="Tabl-head" xml:lang="ru-RU">Описание</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">1</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Устройство</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU"><span>Традиционно это поле содержит фактическое имя файла устройства, связанного с физическим устройством, такое как </span><em>/dev/hda1</em><span> (первый раздел ведущего (master) устройства на первом канале IDE). Но учитывая, что в современных компьютерах может быть множество динамически подключаемых устройств (таких, как устройства USB), многие современные дистрибутивы Linux связывают устройства с текстовыми метками. Такая метка (записываемая в устройство хранения во время форматирования) читается операционной системой в момент подключения устройства. Благодаря этому становится неважным, с каким файлом устройства связано физическое устройство, оно в любом случае будет идентифицировано верно</span></p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">2</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Точка монтирования</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Каталог в файловой системе, к которому подключается устройство</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">3</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Тип файловой системы</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Linux позволяет монтировать множество типов файловых систем. Наиболее близкой к Linux является файловая система ext3, но точно так же поддерживаются другие типы, такие как FAT16 (<span class="command char-style-override-4">msdos</span>), FAT32 (<span class="command char-style-override-4">vfat</span>), NTFS (<span class="command char-style-override-4">ntfs</span>), CD-ROM (<span class="command char-style-override-4">iso9660</span>) и пр.</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">4</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Параметры</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Файловые системы могут монтироваться с разными параметрами. Например, можно смонтировать файловую систему в режиме «только для чтения» или запретить выполнять какие-либо программы из нее (очень полезная мера предосторожности для съемных носителей)</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">5</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Частота</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Единственное число, определяющее, когда должно выполняться резервное копирование файловой системы командой <span class="command char-style-override-4">dump</span></p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">6</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Порядок</p>
+
+</td>
+
+      <td class="Cell-Style-1">       <p class="Tabl-body" xml:lang="ru-RU">Единственное число, определяющее, в каком порядке файловая система должна проверяться командой <span class="command char-style-override-4">fsck</span></p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <h3 xml:lang="ru-RU">Просмотр списка смонтированных файловых систем</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Для монтирования файловых систем используется команда <span class="command char-style-override-1">mount</span>. Если ввести команду без аргументов, она выведет список файловых систем, смонтированных в настоящий момент:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>mount</strong></p>
+
+    <p class="listing-body">/dev/sda2 on / type ext3 (rw)</p>
+
+    <p class="listing-body">proc on /proc type proc (rw)</p>
+
+    <p class="listing-body">sysfs on /sys type sysfs (rw)</p>
+
+    <p class="listing-body">devpts on /dev/pts type devpts (rw,gid=5,mode=620)</p>
+
+    <p class="listing-body">/dev/sda5 on /home type ext3 (rw)</p>
+
+    <p class="listing-body">/dev/sda1 on /boot type ext3 (rw)</p>
+
+    <p class="listing-body">tmpfs on /dev/shm type tmpfs (rw)</p>
+
+    <p class="listing-body">none on /proc/sys/fs/binfmt_misc type binfmt_misc (rw)</p>
+
+    <p class="listing-body">sunrpc on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw)</p>
+
+    <p class="listing-body">fusectl on /sys/fs/fuse/connections type fusectl (rw)</p>
+
+    <p class="listing-body">/dev/sdd1 on /media/disk type vfat (rw,nosuid,nodev,noatime, uhelper=hal,uid=500,utf8,shortname=lower)</p>
+
+    <p class="list-last">twin4:/musicbox on /misc/musicbox type nfs4 (rw,addr=192.168.1.4)</p>
+
+    <p xml:lang="ru-RU">Список имеет следующий формат: <em>устройство</em> <span class="command char-style-override-1">on</span> <em>точка_монтирования</em> <span class="command char-style-override-1">type</span> <em>тип_файловой_системы</em> (<em>параметры</em>). Например, первая строка соответствует устройству <em>/dev/sda2</em>, смонтированному как корневая файловая система типа <span class="command char-style-override-1">ext3,</span> доступная для чтения и записи (параметр <span class="command char-style-override-1">rw</span>). В конце списка можно заметить две интересные записи. Предпоследняя запись соответствует 2-гигабайтной SD-карте памяти в устройстве для чтения карт памяти, смонтированной в каталог <em>/media/disk</em>, последняя запись соответствует сетевому приводу, смонтированному в каталог <em>/</em><em>misc/musicbox</em>.</p>
+
+    <p xml:lang="ru-RU">Для первого эксперимента возьмем привод CD-ROM. Сначала посмотрим, что имеется в системе, перед тем как вставить компакт-диск:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>mount</strong></p>
+
+    <p class="listing-body">/dev/mapper/VolGroup00-LogVol00 on / type ext3 (rw)</p>
+
+    <p class="listing-body">proc on /proc type proc (rw)</p>
+
+    <p class="listing-body">sysfs on /sys type sysfs (rw)</p>
+
+    <p class="listing-body">devpts on /dev/pts type devpts (rw,gid=5,mode=620)</p>
+
+    <p class="listing-body">/dev/hda1 on /boot type ext3 (rw)</p>
+
+    <p class="listing-body">tmpfs on /dev/shm type tmpfs (rw)</p>
+
+    <p class="listing-body">none on /proc/sys/fs/binfmt_misc type binfmt_misc (rw)</p>
+
+    <p class="list-last">sunrpc on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw)</p>
+
+    <p xml:lang="ru-RU">Этот список получен в системе CentOS 5, где для создания корневой файловой системы используется диспетчер LVM. Подобно многим современным дистрибутивам Linux, эта система пытается автоматически монтировать компакт-диски. Вставив в привод компакт-диск, мы увидим следующее:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>mount</strong></p>
+
+    <p class="listing-body">/dev/mapper/VolGroup00-LogVol00 on / type ext3 (rw)</p>
+
+    <p class="listing-body">proc on /proc type proc (rw)</p>
+
+    <p class="listing-body">sysfs on /sys type sysfs (rw)</p>
+
+    <p class="listing-body">devpts on /dev/pts type devpts (rw,gid=5,mode=620)</p>
+
+    <p class="listing-body">/dev/hda1 on /boot type ext3 (rw)</p>
+
+    <p class="listing-body">tmpfs on /dev/shm type tmpfs (rw)</p>
+
+    <p class="listing-body">none on /proc/sys/fs/binfmt_misc type binfmt_misc (rw)</p>
+
+    <p class="listing-body">sunrpc on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw)</p>
+
+    <p class="list-last">/dev/hdc on /media/live-1.0.10-8 type iso9660 (ro,noexec,nosuid,nodev,uid=500)</p>
+
+    <p xml:lang="ru-RU">Это практически тот же список, с одной дополнительной записью. Последняя ­запись в списке сообщает, что компакт-диск в приводе CD-ROM (устройство <em>/d</em><em>ev/hdc</em> в этой системе) смонтирован в каталог <em>/media/live</em><em>-1.0.10-8</em> и имеет файловую систему <span class="command char-style-override-1">iso9660</span> (типичную для компакт-дисков). Обратите внимание на имя устройства. Когда вы будете проводить эксперимент в своей системе, очень вероятно, что имя устройства у вас будет отличаться.</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">ВНИМАНИЕ</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">В примерах, демонстрируемых ниже, особое внимание обращайте на фактические имена устройств в вашей системе и не используйте имена, приводящиеся в примерах здесь!</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Также отметьте, что аудиодиск — это не то же самое, что CD-ROM. Аудиодиск не имеет файловой системы и потому не может быть смонтирован в общепринятом смысле.</p>
+
+    <p xml:lang="ru-RU">Теперь, когда мы знаем имя устройства для привода CD-ROM, размонтируем диск и повторно смонтируем его в другой каталог в дереве файловой системы. Для этого необходимо получить права суперпользователя (способом, соответствующим вашей системе) и размонтировать диск командой <span class="command char-style-override-1">umount</span>:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>su -</strong></p>
+
+    <p class="listing-body">Password:</p>
+
+    <p class="list-last">[root@linuxbox ~]# <strong>umount /dev/hdc</strong></p>
+
+    <p xml:lang="ru-RU">Следующий шаг: создать новую точку монтирования диска. <em>Точка монтирования</em> — это самый обычный каталог где-то в дереве файловой системы. В таком каталоге нет ничего необычного. Он даже не должен быть пустым каталогом, правда, монтирование устройства в непустой каталог сделает его прежнее содержимое недоступным, пока устройство не будет размонтировано. Итак, создаем новый каталог:</p>
+
+    <p class="list-one">[root@linuxbox ~]# <strong>mkdir /mnt/cdrom</strong></p>
+
+    <p xml:lang="ru-RU">И наконец, смонтируем CD-ROM в новую точку монтирования. Параметр <span class="command char-style-override-1">-t</span> позволяет указать тип файловой системы:</p>
+
+    <p class="list-one">[root@linuxbox ~]# <strong>mount -t iso9660 /dev/hdc /mnt/cdrom</strong></p>
+
+    <p xml:lang="ru-RU">После этого можно исследовать содержимое компакт-диска в новой точке монтирования:</p>
+
+    <p class="list-first">[root@linuxbox ~]# <strong>cd /mnt/cdrom</strong></p>
+
+    <p class="list-last">[root@linuxbox cdrom]# <strong>ls</strong></p>
+
+    <p xml:lang="ru-RU">Обратите внимание, что происходит при попытке размонтировать компакт-диск:</p>
+
+    <p class="list-first">[root@linuxbox cdrom]# <strong>umount /dev/hdc</strong></p>
+
+    <p class="list-last">umount: /mnt/cdrom: device is busy</p>
+
+    <p xml:lang="ru-RU">В чем причина? Устройство нельзя размонтировать, если оно используется каким-то пользователем или другим процессом. В данном случае мы изменили текущий рабочий каталог, перенеся его в точку монтирования компакт-диска, что и стало причиной занятости устройства. Эту проблему легко исправить, перенеся текущий рабочий каталог куда-нибудь в другое место за пределами точки монтирования:</p>
+
+    <p class="list-first">[root@linuxbox cdrom]# <strong>cd</strong></p>
+
+    <p class="list-last">[root@linuxbox ~]# <strong>umount /dev/hdc</strong></p>
+
+    <p xml:lang="ru-RU">Теперь устройство было успешно размонтировано.</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">Почему важно размонтировать устройства</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Если взглянуть на вывод команды <span class="command char-style-override-1">free</span>, показывающей статистику использования памяти, можно увидеть статистику с названием <em>buffers</em> (буферы). Компьютерные системы проектируются так, чтобы работать максимально быстро. Но медленные устройства препятствуют этому. Ярким примером служат принтеры. Даже самый быстрый принтер выглядит чрезвычайно медлительным по компьютерным стандартам. Компьютеры работали бы крайне медленно, если бы действительно были вынуждены ждать, пока принтер завершит печать страницы. В давние времена (когда персональные компьютеры еще не были многозадачными) это представляло настоящую проблему. При попытке распечатать электронную таблицу или текстовый документ компьютер мог стать недоступным до конца печати. Компьютер не мог посылать данные принтеру быстрее, чем тот мог их обработать, а принтеры не могли работать быстрее, потому что не могли быстро печатать. Эта проблема была решена созданием <em>буфера печати</em>, устройства, содержащего некоторый объем ОЗУ и находящегося между компьютером и принтером. При наличии буфера печати компьютер мог послать данные в буфер печати, который сохранял их в быстрой памяти ОЗУ, и компьютер возвращался к работе, не дожидаясь конца печати. В то же время буфер печати мог передавать данные принтеру из своей памяти со скоростью, приемлемой для принтера.</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Идея буферизации широко используется для увеличения производительности компьютеров — необходимость работы с медленными устройствами не должна ухудшать производительность системы. Операционные системы хранят данные, прочитанные с устройства и предназначенные для записи в устройство, так долго, насколько это возможно, и используют их, прежде чем фактически обратиться к медленному устройству. В системе Linux, например, можно заметить, что при продолжительной работе она заполняет всю память. Это не означает, что Linux «использует» всю память, это означает лишь то, что Linux использует в своих интересах всю доступную память и буферизует как можно больше данных.</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Буферизация позволяет очень быстро выполнять запись в устройства хранения, потому что запись в физическое устройство откладывается «на потом». Данные, предназначенные для устройства, накапливаются в памяти. Время от времени операционная система записывает эти данные в физическое устройство.</p>
+
+    <p class="Vrezka-body-Last" xml:lang="ru-RU">Размонтирование устройства влечет за собой запись всех оставшихся данных в это устройство, чтобы его можно было безопасно извлечь. Если носитель извлечь, не выполнив размонтирование, есть вероятность, что не все данные, предназначенные для устройства, будут записаны в него. Иногда эти данные могут включать жизненно важные обновления каталогов, отсутствие которых может привести к повреждению файловой системы — одной из самых больших неприятностей, которые могут случиться с компьютером.</p>
+
+    <h3 xml:lang="ru-RU">Определение названий устройств</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Иногда сложно определить название (имя) устройства. В прошлом это было проще. Устройство всегда находилось в одном месте и никогда не менялось. Unix-подобные системы именно так и действовали. Во времена, когда разрабатывалась система Unix, для «смены дискового устройства» требовалось использовать подъемник, чтобы извлечь из комнаты с ЭВМ устройство размером со стиральную машину. В последние годы типовая аппаратная конфигурация настольного компьютера стала намного динамичнее, и система Linux вынуждена быть более гибкой, чем ее предшественницы.</p>
+
+    <p xml:lang="ru-RU">В примерах, приведенных выше, мы использовали способность современной системы Linux «как по волшебству» монтировать устройства, чтобы узнавать их названия постфактум. Но как быть тем, кто управляет сервером или каким-то другим окружением, где автоматическое монтирование не поддерживается? Как в этом случае определить название устройства?</p>
+
+    <p xml:lang="ru-RU">Сначала давайте посмотрим, как система выбирает названия для устройств. Если вывести содержимое каталога <em>/dev</em> (где живут все устройства), можно увидеть значительное число устройств:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>ls /dev</strong></p>
+
+    <p xml:lang="ru-RU">Содержимое списка показывает некоторые шаблоны в именовании устройств, неполный список которых приводится в табл. 15.2.</p>
+
+    <p class="Tabl-head" xml:lang="ru-RU"><strong>Таблица 15.2.</strong> Названия устройств хранения данных в Linux</p>
+
+    <table id="table-68" class="Table-Style-1">
+      <colgroup>      <col/>
+
+      <col/>
+
+</colgroup>
+
+      <tbody>      <tr>      <td class="Cell-Style-2 cell-style-override-1">       <p class="Tabl-head" xml:lang="ru-RU">Шаблон</p>
+
+</td>
+
+      <td class="Cell-Style-2 cell-style-override-1">       <p class="Tabl-head" xml:lang="ru-RU">Устройство</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/dev/fd*</em></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">Приводы гибких дисков.</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/dev/hd*</em></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><span>Диски IDE (PATA) в старых системах. Обычно материнские платы содержат два разъема, или </span><em>канала</em><span> IDE, к каждому из которых можно подключить шлейф, рассчитанный на два устройства. Первое устройство, подключенное к такому шлейфу, называется </span><em>ведущим устройством</em><span> (</span><span>master device), а второе — </span><em>подчиненным устройством</em><span> (slave device). Имена устройств упорядочены так, что ведущее устройство, подключенное к первому каналу, получает имя </span><em>/dev/hda</em><span>, а ведомое устройство, подключенное к первому каналу, получает имя </span><em>/dev/hdb</em><span>; ведущее устройство, подключенное ко второму каналу, получает имя </span><em>/dev/hdc</em><span>, и т.д. Цифра в конце определяет номер раздела на устройстве. Например, имя </span><em>/dev/hda1</em><span> соответствует первому разделу на первом жестком диске в системе, тогда как имя </span><em>/dev/hda</em><span> соответствует всему устройству в целом</span></p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/dev/lp*</em></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">Принтеры</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/dev/sd*</em></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">Диски SCSI. В последних версиях системы Linux ядро интерпретирует все дисковые устройства (включая жесткие диски PATA/SATA, флеш-диски и съемные накопители USB, такие как портативные музыкальные плееры и цифровые камеры) как диски SCSI. В остальном система именования напоминает прежнюю систему <em>/dev/hd*</em>, описанную выше</p>
+
+</td>
+
+</tr>
+
+      <tr>      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU"><em>/dev/sr*</em></p>
+
+</td>
+
+      <td class="Cell-Style-1 cell-style-override-1">       <p class="Tabl-body" xml:lang="ru-RU">Приводы оптических дисков (приводы CD/DVD, как пишущие, так и нет)</p>
+
+</td>
+
+</tr>
+
+</tbody>
+    </table>
+
+    <p class="No-Paragraph-Style"></p>
+
+    <p xml:lang="ru-RU">Кроме того, во многих системах можно увидеть такие символические ссылки, как <em>/dev/cdrom</em>, <em>/dev/dvd</em> и <em>/dev/floppy</em>, которые ссылаются на фактические файлы устройств и предусмотрены для удобства.</p>
+
+    <p xml:lang="ru-RU">Если вам доведется работать в системе, которая не монтирует автоматически съемные носители, вы можете использовать следующий прием для определения названий таких устройств после их подключения. Сначала запустите мониторинг содержимого файла <em>/var/log/messages</em> в режиме реального времени (для этого могут потребоваться права суперпользователя):</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>sudo tail -f /var/log/messages</strong></p>
+
+    <p xml:lang="ru-RU">Эта команда выведет несколько последних строк из файла и приостановится. Далее подключите извлекаемое устройство. В этом примере мы использовали 16-мегабайтный флеш-диск. Практически сразу же ядро обнаружит новое устройство и проверит его:</p>
+
+    <p class="list-first">Jul 23 10:07:53 linuxbox kernel: usb 3-2: new full speed USB device using uhci_hcd and address 2</p>
+
+    <p class="listing-body">Jul 23 10:07:53 linuxbox kernel: usb 3-2: configuration #1 chosen from 1 choice</p>
+
+    <p class="listing-body">Jul 23 10:07:53 linuxbox kernel: scsi3 : SCSI emulation for USB Mass Storage devices</p>
+
+    <p class="listing-body">Jul 23 10:07:58 linuxbox kernel: scsi scan: INQUIRY result too short (5), using 36</p>
+
+    <p class="listing-body">Jul 23 10:07:58 linuxbox kernel: scsi 3:0:0:0: Direct-Access Easy Disk 1.00 PQ: 0 ANSI: 2</p>
+
+    <p class="listing-body">Jul 23 10:07:59 linuxbox kernel: sd 3:0:0:0: [sdb] 31263 512-byte hardware sectors (16 MB)</p>
+
+    <p class="listing-body">Jul 23 10:07:59 linuxbox kernel: sd 3:0:0:0: [sdb] Write Protect is off</p>
+
+    <p class="listing-body">Jul 23 10:07:59 linuxbox kernel: sd 3:0:0:0: [sdb] Assuming drive cache: write through</p>
+
+    <p class="listing-body">Jul 23 10:07:59 linuxbox kernel: sd 3:0:0:0: [sdb] 31263 512-byte hardware sectors (16 MB)</p>
+
+    <p class="listing-body">Jul 23 10:07:59 linuxbox kernel: sd 3:0:0:0: [sdb] Write Protect is off</p>
+
+    <p class="listing-body">Jul 23 10:07:59 linuxbox kernel: sd 3:0:0:0: [sdb] Assuming drive cache: write through</p>
+
+    <p class="listing-body">Jul 23 10:07:59 linuxbox kernel: sdb: sdb1</p>
+
+    <p class="listing-body">Jul 23 10:07:59 linuxbox kernel: sd 3:0:0:0: [sdb] Attached SCSI removable disk</p>
+
+    <p class="list-last">Jul 23 10:07:59 linuxbox kernel: sd 3:0:0:0: Attached scsi generic sg3 type 0</p>
+
+    <p xml:lang="ru-RU">Когда вывод опять приостановится, нажмите <span class="interface char-style-override-2">CTRL+C</span>, чтобы вернуться в приглашение командной строки. Наибольший интерес для нас представляют строки с упоминанием имени устройства <span class="command char-style-override-1">[sdb]</span>, соответствующего нашим ожиданиям в отношении названия устройства диска SCSI. В этом отношении следующие две строки являются для нас особенно показательными:</p>
+
+    <p class="list-first">Jul 23 10:07:59 linuxbox kernel: sdb: sdb1</p>
+
+    <p class="list-last">Jul 23 10:07:59 linuxbox kernel: sd 3:0:0:0: [sdb] Attached SCSI removable disk</p>
+
+    <p xml:lang="ru-RU">Они сообщают, что имя <em>/dev/sdb</em> соответствует всему устройству, а имя <em>/dev/sdb1</em> — первому разделу на этом устройстве. Как видите, работая с Linux, иногда приходится проводить массу интересных детективных расследований!</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">ПРИМЕЧАНИЕ</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Прием с использованием команды <span class="command char-style-override-1">tail -f /var/log</span><span class="command char-style-override-1">/messages</span> представляет собой отличный способ наблюдения за происходящим в системе в режиме реального времени.</p>
+
+    <p xml:lang="ru-RU">Зная имя устройства, можно смонтировать флеш-диск:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>sudo mkdir /mnt/flash</strong></p>
+
+    <p class="listing-body">[me@linuxbox ~]$ <strong>sudo mount /dev/sdb1 /mnt/flash</strong></p>
+
+    <p class="listing-body">[me@linuxbox ~]$ <strong>df</strong></p>
+
+    <p class="listing-body">Filesystem&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;1K-blocks&#160;&#160;&#160;&#160;&#160;&#160;Used Available Use% Mounted on</p>
+
+    <p class="listing-body">/dev/sda2&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;15115452&#160;&#160;&#160;5186944&#160;&#160;&#160;9775164&#160;&#160;35% /</p>
+
+    <p class="listing-body">/dev/sda5&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;59631908&#160;&#160;31777376&#160;&#160;24776480&#160;&#160;57% /home</p>
+
+    <p class="listing-body">/dev/sda1&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;147764&#160;&#160;&#160;&#160;&#160;17277&#160;&#160;&#160;&#160;122858&#160;&#160;13% /boot</p>
+
+    <p class="listing-body">tmpfs&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;776808&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0&#160;&#160;&#160;&#160;776808&#160;&#160;&#160;0% /dev/shm</p>
+
+    <p class="list-last">/dev/sdb1&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;15560&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;0&#160;&#160;&#160;&#160;&#160;15560&#160;&#160;&#160;0% /mnt/flash</p>
+
+    <p xml:lang="ru-RU">Имя устройства сохраняется неизменным, пока оно остается физически подключенным к компьютеру и до перезагрузки компьютера.</p>
+
+    <h2 id="toc_marker-20-2" xml:lang="ru-RU">Создание новых файловых систем</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Представьте, что вам нужно отформатировать флеш-диск и вместо файловой системы FAT32 создать на нем файловую систему, родную для Linux. Для этого следует выполнить две операции: сначала (при необходимости) создать новое распределение разделов, если имеющееся вас не устраивает, а затем создать новую, пустую файловую систему.</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">ВНИМАНИЕ</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">Следующее упражнение производит форматирование флеш-диска. Используйте диск, не содержащий ничего, что вам было бы нужно, потому что вся информация на диске будет стерта! И снова: <strong>убедитесь, что используете имя устройства, верное для вашей системы, а не то, которое показано в примере. Игнорирование этого предупреждения может привести к форматированию (то есть к стиранию) другого диска!</strong></p>
+
+    <h3 xml:lang="ru-RU">Управление разделами с помощью fdisk</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Программа <span class="command char-style-override-1">fdisk</span> позволяет напрямую выполнять низкоуровневые операции с дисковыми устройствами (такими, как жесткие диски и флеш-диски). С помощью этого инструмента можно изменять, удалять и создавать разделы на устройстве. Чтобы приступить к работе с флеш-диском, его нужно сначала размонтировать (если прежде он был смонтирован) и затем запустить программу <span class="command char-style-override-1">fdisk</span>, как показано ниже:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>sudo umount /dev/sdb1</strong></p>
+
+    <p class="list-last">[me@linuxbox ~]$ <strong>sudo fdisk /dev/sdb</strong></p>
+
+    <p xml:lang="ru-RU">Обратите внимание, что здесь нужно указать имя, соответствующее устройству, целиком, без номера раздела. После запуска программы вы увидите следующее приглашение:</p>
+
+    <p class="list-first">Команда (m для справки)::</p>
+
+    <p class="list-last">)</p>
+
+    <p xml:lang="ru-RU">После ввода команды <span class="command char-style-override-1">m</span> на экране появится меню программы:</p>
+
+    <p class="list-first">Справка:</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">&#160;&#160;DOS (MBR)</p>
+
+    <p class="listing-body">&#160;&#160;&#160;a&#160;&#160;&#160;изменить флаг загрузочного раздела</p>
+
+    <p class="listing-body">&#160;&#160;&#160;b&#160;&#160;&#160;изменить вложенную BSD-метку диска</p>
+
+    <p class="listing-body">&#160;&#160;&#160;c&#160;&#160;&#160;переключить флаг совместимости с DOS</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">&#160;&#160;Общие</p>
+
+    <p class="listing-body">&#160;&#160;&#160;d&#160;&#160;&#160;удалить раздел</p>
+
+    <p class="listing-body">&#160;&#160;&#160;F&#160;&#160;&#160;список свободного нераспределенного пространства</p>
+
+    <p class="listing-body">&#160;&#160;&#160;l&#160;&#160;&#160;список известных типов разделов</p>
+
+    <p class="listing-body">&#160;&#160;&#160;n&#160;&#160;&#160;добавить новый раздел</p>
+
+    <p class="listing-body">&#160;&#160;&#160;p&#160;&#160;&#160;показать таблицу разделов</p>
+
+    <p class="listing-body">&#160;&#160;&#160;t&#160;&#160;&#160;изменить тип раздела</p>
+
+    <p class="listing-body">&#160;&#160;&#160;v&#160;&#160;&#160;проверить таблицу разделов</p>
+
+    <p class="listing-body">&#160;&#160;&#160;i&#160;&#160;&#160;печать информации о разделах</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">&#160;&#160;Разное</p>
+
+    <p class="listing-body">&#160;&#160;&#160;m&#160;&#160;&#160;показать это меню</p>
+
+    <p class="listing-body">&#160;&#160;&#160;u&#160;&#160;&#160;изменить единицы отображения/ввода</p>
+
+    <p class="listing-body">&#160;&#160;&#160;x&#160;&#160;&#160;дополнительные функции (только для экспертов)</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">&#160;&#160;Script</p>
+
+    <p class="listing-body">&#160;&#160;&#160;I&#160;&#160;&#160;загрузка разметки диска из файла сценария sfdisk</p>
+
+    <p class="listing-body">&#160;&#160;&#160;O&#160;&#160;&#160;сохранение разметки диска в файле сценария sfdisk</p>
+
+    <p class="listing-body">&#160;&#160;Сохранить и выйти</p>
+
+    <p class="listing-body">&#160;&#160;&#160;w&#160;&#160;&#160;сохранить таблицу на диск и выйти</p>
+
+    <p class="listing-body">&#160;&#160;&#160;q&#160;&#160;&#160;выйти без сохранения изменений</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">&#160;&#160;Создать новую метку</p>
+
+    <p class="listing-body">&#160;&#160;&#160;g&#160;&#160;&#160;создать новую пустую таблицу разделов GPT</p>
+
+    <p class="listing-body">&#160;&#160;&#160;G&#160;&#160;&#160;создать новую пустую таблицу разделов SGI (IRIX)</p>
+
+    <p class="listing-body">&#160;&#160;&#160;o&#160;&#160;&#160;создать новую пустую таблицу разделов DOS</p>
+
+    <p class="list-last">&#160;&#160;&#160;s&#160;&#160;&#160;создать новую пустую таблицу разделов Sun</p>
+
+    <p xml:lang="ru-RU">Первое, что следует сделать, — исследовать список имеющихся разделов. Для этого введите команду <span class="command char-style-override-1">p</span>, она выведет таблицу разделов на устройстве:</p>
+
+    <p class="list-first">Command (m for help): <strong>p</strong></p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">Disk /dev/sdb: 16 MB, 16006656 bytes</p>
+
+    <p class="listing-body">1 heads, 31 sectors/track, 1008 cylinders</p>
+
+    <p class="listing-body">Units = cylinders of 31 * 512 = 15872 bytes</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">&#160;&#160;Device Boot&#160;&#160;&#160;&#160;&#160;&#160;&#160;Start&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;End&#160;&#160;&#160;&#160;&#160;&#160;Blocks&#160;&#160;&#160;Id&#160;&#160;System</p>
+
+    <p class="list-last">/dev/sdb1&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;2&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;1008&#160;&#160;&#160;&#160;&#160;&#160;&#160;15608+&#160;&#160;&#160;b&#160;&#160;W95 FAT32</p>
+
+    <p xml:lang="ru-RU">Обратите внимание, что устройство имеет объем 16 Мбайт и единственный раздел (1), занимающий 1006 цилиндров из 1008 доступных на устройстве. Раздел идентифицирован как раздел Windows 95 FAT32. Некоторые программы используют этот идентификатор, ограничивая виды операций с диском, но чаще изменение идентификатора не влечет серьезных последствий. Однако ради демонстрации мы изменим его, чтобы показать, что это раздел Linux. Для этого нужно сначала узнать, какой идентификатор обозначает разделы Linux. В листинге, приведенном выше, мы видели, что существующий раздел имеет идентификатор (столбец <span class="command char-style-override-1">Id</span>)<span class="command char-style-override-1"> </span><span class="command char-style-override-1">b</span>. Чтобы увидеть список известных типов разделов, вернитесь к меню программы и обратите внимание на пункт:</p>
+
+    <p class="list-one">l список известных типов разделов</p>
+
+    <p xml:lang="ru-RU">Если ввести команду <span class="command char-style-override-1">l</span>, появится длинный список допустимых типов разделов. Среди них можно увидеть идентификатор <span class="command char-style-override-1">b</span> типа существующего раздела и идентификатор <span class="command char-style-override-1">83</span> для Linux. Вернемся обратно к меню программы, где можно увидеть команду изменения идентификатора раздела:</p>
+
+    <p class="list-one">t изменить тип раздела</p>
+
+    <p xml:lang="ru-RU">Введите <span class="command char-style-override-1">t</span> и затем новый идентификатор:</p>
+
+    <p class="list-first">Command (m for help): <strong>t</strong></p>
+
+    <p class="listing-body">Selected partition 1</p>
+
+    <p class="listing-body">Hex code (type L to list codes): <strong>83</strong></p>
+
+    <p class="list-last">Changed system type of partition 1 to 83 (Linux)</p>
+
+    <p xml:lang="ru-RU">Это все изменения, которые нам нужно было сделать. До этого момента никаких изменений на самом устройстве не было произведено (все изменения пока просто зафиксированы в памяти программы, а не на физическом устройстве), поэтому теперь запишем измененную таблицу разделов на устройство и выйдем.</p>
+
+    <p xml:lang="ru-RU">Для этого введите команду <span class="command char-style-override-1">w</span>:</p>
+
+    <p class="list-first">Command (m for help): <strong>w</strong></p>
+
+    <p class="listing-body">The partition table has been altered!</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">Calling ioctl() to re-read partition table.</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">WARNING: If you have created or modified any DOS 6.x</p>
+
+    <p class="listing-body">partitions, please see the fdisk manual page for additional</p>
+
+    <p class="listing-body">information.</p>
+
+    <p class="listing-body">Syncing disks.</p>
+
+    <p class="list-last">[me@linuxbox ~]$</p>
+
+    <p xml:lang="ru-RU">Если бы мы решили оставить устройство в неизменном состоянии, то могли бы ввести команду <span class="command char-style-override-1">q</span> и покинуть программу без записи изменений на устройство. Преду­преждающее сообщение, выглядящее зловещим, можно просто игнорировать<span class="Superscript"><a id="footnote-343439-7-backlink" class="footnote-link" href="#footnote-343439-7">7</a></span>.</p>
+
+    <h3 xml:lang="ru-RU">Создание новой файловой системы с помощью mkfs</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Завершив редактирование разделов (довольно простое, хотя так бывает не всегда), мы создадим на флеш-диске новую файловую систему. Для этого воспользуемся программой <span class="command char-style-override-1">mkfs</span> (сокращенно от <em>make filesystem</em> — создать файловую систему), способной создавать разные файловые системы. Чтобы создать на устройстве файловую систему ext3, следует передать команде параметр <span class="command char-style-override-1">-t</span> и с типом файловой системы ext3, затем указать имя устройства и раздел, который требуется отформатировать:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>sudo mkfs -t ext3 /dev/sdb1</strong></p>
+
+    <p class="listing-body">mke2fs 1.40.2 (12-Jul-2012)</p>
+
+    <p class="listing-body">Filesystem label=</p>
+
+    <p class="listing-body">OS type: Linux</p>
+
+    <p class="listing-body">Block size=1024 (log=0)</p>
+
+    <p class="listing-body">Fragment size=1024 (log=0)</p>
+
+    <p class="listing-body">3904 inodes, 15608 blocks</p>
+
+    <p class="listing-body">780 blocks (5.00%) reserved for the super user</p>
+
+    <p class="listing-body">First data block=1</p>
+
+    <p class="listing-body">Maximum filesystem blocks=15990784</p>
+
+    <p class="listing-body">2 block groups</p>
+
+    <p class="listing-body">8192 blocks per group, 8192 fragments per group</p>
+
+    <p class="listing-body">1952 inodes per group</p>
+
+    <p class="listing-body">Superblock backups stored on blocks:</p>
+
+    <p class="listing-body">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;8193</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">Writing inode tables: done</p>
+
+    <p class="listing-body">Creating journal (1024 blocks): done</p>
+
+    <p class="listing-body">Writing superblocks and filesystem accounting information: done</p>
+
+    <p class="listing-body">&#160;</p>
+
+    <p class="listing-body">This filesystem will be automatically checked every 34 mounts or</p>
+
+    <p class="listing-body">180 days, whichever comes first. Use tune2fs -c or -i to override.</p>
+
+    <p class="list-last">[me@linuxbox ~]$</p>
+
+    <p xml:lang="ru-RU">Когда выбирается тип файловой системы ext3, программа выводит массу информации. Чтобы восстановить на устройстве оригинальную файловую систему FAT32, следует указать тип файловой системы vfat:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>sudo mkfs -t vfat /dev/sdb1</strong></p>
+
+    <p xml:lang="ru-RU">Эту процедуру с редактированием разделов и форматированием можно повторять с любыми дополнительными устройствами хранения, подключаемыми к системе. Хотя в данном примере мы работали с маленьким флеш-диском, ту же процедуру можно применить и к внутренним жестким дискам, и к другим извлекаемым устройствам хранения, таким как жесткие USB-диски.</p>
+
+    <h2 id="toc_marker-20-3" xml:lang="ru-RU">Проверка и восстановление файловой системы</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Знакомясь с файлом <em>/etc/fstab</em>, мы видели некие странные цифры в конце каждой строки. Каждый раз, когда система загружается, она проверяет целостность файловых систем перед их монтированием. Эту проверку выполняет программа <span class="command char-style-override-1">fsck</span> (сокращенно от <em>filesystem check</em> — проверка файловой системы). Последнее число в каждой записи в файле <em>fstab</em> определяет порядок проверки файловых систем. В примере, приведенном выше, видно, что корневая файловая система проверяется первой, вслед за ней проверяются файловые системы <em>home</em> и <em>boot</em>. Устройства с нулем в последнем поле не проверяются стандартными механизмами.</p>
+
+    <p xml:lang="ru-RU">Программа <span class="command char-style-override-1">fsck</span> может не только проверить целостность, но и восстановить поврежденные файловые системы с той или иной степенью успеха в зависимости от масштаба повреждений. В Unix-подобных системах восстановленные фрагменты файлов помещаются в каталог <em>lost+found</em>, находящийся в корне каждой файловой системы.</p>
+
+    <p xml:lang="ru-RU">Проверить наш флеш-диск (который предварительно необходимо размонтировать) можно с помощью следующей команды:</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>sudo fsck /dev/sdb1</strong></p>
+
+    <p class="listing-body">fsck 1.40.8 (13-Mar-2012)</p>
+
+    <p class="listing-body">e2fsck 1.40.8 (13-Mar-2012)</p>
+
+    <p class="list-last">/dev/sdb1: clean, 11/3904 files, 1661/15608 blocks</p>
+
+    <p xml:lang="ru-RU">По моему опыту, файловые системы повреждаются крайне редко, если нет никаких проблем с аппаратной частью, таких как выход из строя привода диска. В большинстве файловых систем обнаруженные на этапе загрузки повреждения вызывают остановку системы с выводом предложения запустить <span class="command char-style-override-1">fsck</span> перед продолжением.</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">что такое fsck?</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">В культуре Unix слово «fsck» часто используется взамен распространенного ругательства, в котором три буквы совпадают с буквами в имени команды. Это показательно — вы почти наверняка будете произносить упомянутое слово, оказавшись в ситуации, вынуждающей запустить <span class="command char-style-override-1">fsck</span>.</p>
+
+    <h2 id="toc_marker-20-4" xml:lang="ru-RU">Форматирование гибких дисков</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Те из вас, кто пользуется компьютерами, настолько старыми, что они оборудованы приводами гибких дисков, также смогут управлять этими устройствами. Подготовка чистого гибкого диска выполняется в два этапа. Сначала нужно выполнить низкоуровневое форматирование диска, а затем создать файловую систему. Для форматирования в данном случае используется программа <span class="command char-style-override-1">dformat</span>, которой передается имя устройства привода гибких дисков (обычно <em>/dev/fd0</em>):</p>
+
+    <p class="list-first">[me@linuxbox ~]$ <strong>sudo fdformat /dev/fd0</strong></p>
+
+    <p class="listing-body">Double-sided, 80 tracks, 18 sec/track. Total capacity 1440 kB.</p>
+
+    <p class="listing-body">Formatting ... done</p>
+
+    <p class="list-last">Verifying ... done</p>
+
+    <p xml:lang="ru-RU">Затем следует создать файловую систему FAT с помощью <span class="command char-style-override-1">mkfs</span>:</p>
+
+    <p class="list-one">[me@linuxbox ~]$ <strong>sudo mkfs -t msdos /dev/fd0</strong></p>
+
+    <p xml:lang="ru-RU">Обратите внимание, что здесь использован тип файловой системы <span class="command char-style-override-1">msdos</span>, чтобы создать старую (и меньшую по размерам) таблицу размещения файлов. После подготовки диска он монтируется как любые другие устройства.</p>
+
+    <h2 id="toc_marker-20-5" xml:lang="ru-RU">Непосредственное перемещение данных между устройствами</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Обычно на компьютерах мы работаем с данными, организованными в файлы, однако точно так же можно работать с данными в «низкоуровневой» форме. Если взглянуть на содержимое диска, можно увидеть, что оно состоит из множества «блоков» данных, которые операционная система интерпретирует как файлы и каталоги. Если бы мы умели интерпретировать диски как простые коллекции блоков данных, мы смогли бы выполнять множество полезных задач, таких как клонирование дисков.</p>
+
+    <p xml:lang="ru-RU">Эту задачу решает программа <span class="command char-style-override-1">dd</span>. Она копирует блоки данных из одного места в другое. По историческим причинам команда имеет уникальный синтаксис:</p>
+
+    <p class="list-one">dd if=<em>входной_файл</em> of=<em>выходной_файл</em> [bs=<em>размер_блока</em> [count=<em>число_блоков</em>]]</p>
+
+    <p xml:lang="ru-RU">Представьте, что у вас есть два флеш-диска USB одинакового размера и вам нужно создать точную копию первого диска на втором. Допустим, что после подключения к компьютеру им назначаются имена устройств <em>/dev/sdb</em> и <em>/dev/sdc</em> соответственно. В этом случае скопировать содержимое первого диска на второй можно следующей командой:</p>
+
+    <p class="list-one"><strong>dd if=/dev/sdb of=/dev/sdc</strong></p>
+
+    <p xml:lang="ru-RU">Как вариант, если к компьютеру подключено только первое устройство, можно скопировать его содержимое в обычный файл, который впоследствии использовать для восстановления или копирования:</p>
+
+    <p class="list-first"><strong>dd if=/dev/sdb of=flash_drive.img</strong></p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">ВНИМАНИЕ</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU"><span class="command char-style-override-1">dd</span> — очень мощная команда. Ее название происходит от <em>data definition</em> (определение данных), но иногда его расшифровывают как <em>destroy disk</em> (уничтожить диск), потому что пользователи часто допускают ошибки в параметрах <span class="command char-style-override-1">if</span> и <span class="command char-style-override-1">of</span>. Всегда дважды проверяйте их, прежде чем нажать <span class="interface char-style-override-2">ENTER</span>!</p>
+
+    <h2 id="toc_marker-20-6" xml:lang="ru-RU">Создание образа компакт-диска</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Запись на компакт-диски (CD-R или CD-RW) выполняется в два этапа: сначала нужно создать файл образа ISO, являющийся точным образом файловой системы компакт-диска, а затем записать файл образа на носитель (то есть на сам компакт-диск).</p>
+
+    <h3 xml:lang="ru-RU">Создание образа-копии компакт-диска</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Чтобы создать ISO-образ имеющегося компакт-диска, необходимо с помощью <span class="command char-style-override-1">dd</span> прочитать все блоки с данными с этого компакт-диска и скопировать их в локальный файл. Например, допустим, что у нас есть компакт-диск с дистрибутивом Ubuntu, и мы хотим создать файл ISO-образа, который потом можно будет использовать для создания нескольких копий. Вставив компакт-диск в привод CD-ROM и определив имя устройства (пусть это будет <em>/dev/cdrom</em>), мы сможем создать файл ISO-образа следующим способом:</p>
+
+    <p class="list-one"><strong>dd if=/dev/cdrom of=ubuntu.iso</strong></p>
+
+    <p xml:lang="ru-RU">Этот прием также применим к дискам DVD с данными, но он не будет работать с аудиодисками, так как для хранения данных на них файловая система не используется. Если вы хотите скопировать аудиодиск, обратитесь к команде <span class="command char-style-override-1">cdrdao</span>.</p>
+
+    <p class="Vrezka-head" xml:lang="ru-RU">что в имени твоем…</p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">В руководствах по созданию и записи оптических дисков, таких как CDROM и DVD, которых в избытке на просторах Интернета, часто можно встретить упоминание двух программ, <span class="command char-style-override-1">mkisofs</span> и <span class="command char-style-override-1">cdrecord</span>. Эти программы были некогда частью популярного пакета <span class="command char-style-override-1">cdrtools</span>, созданного Йоргом Шиллингом (Jörg Schilling). Летом 2006-го мистер Шиллинг изменил лицензию в части, касающейся пакета <span class="command char-style-override-1">cdrtools</span>, из-за чего она, по мнению многих в сообществе пользователей Linux, стала несовместимой с GNU GPL. Как результат, на основе <span class="command char-style-override-1">cdrtools</span> был создан альтернативный проект, включающий программы <span class="command char-style-override-1">wodim</span> и <span class="command char-style-override-1">genisoimage</span> взамен <span class="command char-style-override-1">cdrecord</span> и <span class="command char-style-override-1">mkisofs</span> соответственно.</p>
+
+    <h3 xml:lang="ru-RU">Создание образа из коллекции файлов</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Создать файл ISO-образа, включающий содержимое некоего каталога, можно с помощью программы <span class="command char-style-override-1">enisoimage</span>. Для этого сначала создадим каталог со всеми необходимыми файлами для включения в образ и затем командой <span class="command char-style-override-1">genisoimage</span> создадим файл образа. Например, если предположить, что вы создали каталог <em>~/cd</em><em>-rom-files</em> и наполнили его файлами для записи на компакт-диск, следующая команда создаст файл образа с именем <em>cd-rom.iso</em>:</p>
+
+    <p class="list-one"><strong>genisoimage -o cd-rom.iso -R -J ~/cd-rom-files</strong></p>
+
+    <p xml:lang="ru-RU">Параметр <span class="command char-style-override-1">-R</span> требует добавить метаданные <em>расширений Rock Ridge</em>, позволяющих использовать длинные имена файлов и права доступа к файлам в стиле POSIX. Аналогично, параметр <span class="command char-style-override-1">-J</span> включает <em>расширения Joliet</em>, разрешающие использовать длинные имена файлов в Windows.</p>
+
+    <h2 id="toc_marker-20-7" xml:lang="ru-RU">Запись образа компакт-диска</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">После подготовки файла образа его можно записать на оптический носитель. Большинство команд, обсуждаемых ниже, применимы и для записи на носители CD-ROM и DVD.</p>
+
+    <h3 xml:lang="ru-RU">Непосредственное монтирование файла ISO-образа</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Существует один трюк, позволяющий монтировать ISO-образы, хранящиеся на жестком диске, и работать с ними, как если бы это были оптические носители. Параметр <span class="command char-style-override-1">-o loop</span>, добавленный в команду <span class="command char-style-override-1">mount</span> (вместе с обязательным параметром <span class="command char-style-override-1">-t iso9660</span>, определяющим тип файловой системы), позволяет смонтировать файл образа в дерево файловой системы, как если бы это было обычное устройство:</p>
+
+    <p class="list-first"><strong>mkdir /mnt/iso_image</strong></p>
+
+    <p class="list-last"><strong>mount -t iso9660 -o loop image.iso /mnt/iso_image</strong></p>
+
+    <p xml:lang="ru-RU">В примере, приведенном выше, мы создали точку монтирования с именем <em>/mnt/iso_image</em> и затем смонтировали в нее файл образа <em>image.iso</em>. После монтирования образа с ним можно работать как с настоящим диском CD-ROM или DVD. Не забудьте размонтировать образ, когда он станет не нужен.</p>
+
+    <h3 xml:lang="ru-RU">Очистка перезаписываемых компакт-дисков</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Перезаписываемые компакт-диски CD-RW нужно стирать, или очищать, перед повторным использованием. Для этого воспользуемся командой <span class="command char-style-override-1">wodim</span>, указав ей имя устройства пишущего привода компакт-дисков и тип очистки. Программа <span class="command char-style-override-1">wodim</span> предлагает несколько типов очистки. Для минимальной (и самой быстрой) очистки следует указать тип <span class="command char-style-override-1">fast</span>:</p>
+
+    <p class="list-first"><strong>wodim dev=/dev/cdrw blank=fast</strong></p>
+
+    <h3 xml:lang="ru-RU">Запись образа</h3>
+
+    <p class="Normal0" xml:lang="ru-RU">Записать образ можно с помощью все той же программы <span class="command char-style-override-1">wodim</span>, указав ей имя устройства пишущего привода компакт-дисков и имя файла образа:</p>
+
+    <p class="list-one"><strong>wodim dev=/dev/cdrw image.iso</strong></p>
+
+    <p xml:lang="ru-RU">Помимо имени устройства и файла образа программа <span class="command char-style-override-1">wodim</span> поддерживает массу дополнительных параметров. Чаще других используются параметры <span class="command char-style-override-1">-v</span> (обеспечивает вывод подробной информации в ходе записи) и <span class="command char-style-override-1">-dao</span> (выполняет запись на диск в режиме <em>disc-at-once</em> — диск целиком). Режим «диск целиком» следует использовать, если вы собираетесь воспроизводить диски в коммерческих целях. По умолчанию <span class="command char-style-override-1">wodim</span> использует режим <em>track-at-once</em> (по одной дорожке), который хорошо подходит для записи музыкальных треков.</p>
+
+    <h2 id="toc_marker-20-8" xml:lang="ru-RU">Дополнительные сведения</h2>
+
+    <p class="Normal0" xml:lang="ru-RU">Часто бывает полезно проверить целостность ISO-образа, загруженного из Интернета. В большинстве случаев распространители ISO-образов сопровождают их <em>файлами с контрольными суммами</em>. Контрольная сумма — это результат экзотических математических вычислений в виде числа, представляющего содержимое целевого файла. Если содержимое файла образа изменится хотя бы в одном бите, его контрольная сумма будет отличаться от указанной распространителем. Для вычисления контрольной суммы чаще всего используется программа <span class="command char-style-override-1">md5sum</span>, возвращающая уникальное шестнадцатеричное число:</p>
+
+    <p class="list-first"><strong>md5sum image.iso</strong></p>
+
+    <p class="list-last">34e354760f9bb7fbf85c96f6a3f94ece&#160;&#160;&#160;image.iso</p>
+
+    <p xml:lang="ru-RU">Загрузив образ, запустите <span class="command char-style-override-1">md5sum</span> для него и сравните результат работы <span class="command char-style-override-1">md5sum</span> со значением, указанным распространителем.</p>
+
+    <p xml:lang="ru-RU">Помимо проверки целостности загруженного файла, программу <span class="command char-style-override-1">md5sum</span> можно использовать для проверки вновь записанного оптического носителя. Для этого сначала вычислите контрольную сумму для файла образа, а затем — для носителя. Вся хитрость проверки носителя заключается в том, чтобы ограничить вычисления частью оптического носителя, содержащей образ. Для этого определите число 2048-байтных блоков в образе (запись на оптические носители всегда выполняется блоками по 2048 байт) и прочитайте с носителя ровно столько блоков. Для некоторых типов носителей это не обязательно. Например, компакт-диск, записанный в режиме disc-at-once, можно проверить так:</p>
+
+    <p class="list-first"><strong>md5sum /dev/cdrom</strong></p>
+
+    <p class="list-last">34e354760f9bb7fbf85c96f6a3f94ece /dev/cdrom</p>
+
+    <p xml:lang="ru-RU">Многие типы носителей, такие как DVD, требуют точного вычисления числа блоков. Следующий пример демонстрирует проверку целостности файла образа <em>dvd-image.iso</em> и диска в устройстве <em>/dev/dvd</em> привода DVD. Вам понятно, как работает эта команда?</p>
+
+    <p class="list-one"><strong>md5sum </strong><strong>dvd-image.iso; dd if=/dev/dvd bs=2048 count=$(( $(stat -</strong><strong>c "%s" dvd-image.iso) / 2048 )) | md5sum</strong></p>
+
+    <p class="Vrezka-body" xml:lang="ru-RU">&#160;</p>
+
+    <div class="footnotes">
+       <div class="footnote">
+         <p class="Snoska" xml:lang="ru-RU"><a id="footnote-343439-7" class="footnote-anchor" href="#footnote-343439-7-backlink">7</a><span class="Superscript char-style-override-3"></span> Оно гласит: «ВНИМАНИЕ: если вы создали или изменили разделы DOS 6.x, прочитайте дополнительную информацию на странице справочного руководства для команды fdisk». — <em>Примеч. пер.</em></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
