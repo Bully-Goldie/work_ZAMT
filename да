@@ -1,0 +1,58 @@
+import math
+
+# Ввод массива M и числа w
+M = [float(input(f"Введите элемент M[{i}]: ")) for i in range(9)]
+w = float(input("Введите число w: "))
+
+# Вычисление массива X
+X = []
+for m in M:
+    cube_root = math.copysign(abs(w - m) ** (1/3), w - m)  # корень кубический с учетом знака
+    sin_squared = math.sin(m) ** 2
+    x = cube_root + sin_squared
+    X.append(x)
+
+# Вывод массива X
+print("\nМассив X:")
+print(X)
+
+# Минимальный элемент X
+min_x = min(X)
+print("Минимальный элемент X:", min_x)
+
+# Количество элементов X > 2
+count_gt_2 = sum(1 for x in X if x > 2)
+print("Количество элементов X > 2:", count_gt_2)
+
+import math
+
+# Ввод массива D и числа t
+D = [float(input(f"Введите элемент D[{i}]: ")) for i in range(12)]
+t = float(input("Введите число t: "))
+
+Z = []
+
+# Вычисление массива Z
+for d in D:
+    if d <= 0:
+        raise ValueError("Элементы массива D должны быть положительными для вычисления log10.")
+    z = t**3 + math.log10(d)**2
+    Z.append(z)
+
+# Вывод массива Z
+print("\nМассив Z:")
+print(Z)
+
+# Среднее арифметическое положительных элементов
+positive_Z = [z for z in Z if z > 0]
+avg_positive = sum(positive_Z) / len(positive_Z) if positive_Z else 0
+
+print("Среднее арифметическое положительных элементов Z:", avg_positive)
+
+# Замена третьего элемента массива Z (индекс 2)
+if len(Z) >= 3:
+    Z[2] = avg_positive
+
+# Вывод финального массива Z
+print("Массив Z после замены третьего элемента:")
+print(Z)
