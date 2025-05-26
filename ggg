@@ -1,0 +1,71 @@
+import math
+
+print("\n--- Задание 3 ---")
+
+D = [1, 4, 9, 2, 0, 5, 7, 8, 3, 6, 10, 11, 12, 13, 14]  # массив из 15 элементов
+b = 2.0  # заданное число
+
+V = []
+for d in D:
+    V_i = (b ** 2 * math.cos(math.sqrt(d + 1))) / (b + 0.3)
+    V.append(V_i)
+
+print("Массив V:", V)
+
+min_val = min(V)
+V[0] = min_val  # заменяем первый элемент на минимальный
+count_min = V.count(min_val)
+print("Обновлённый V:", V)
+print("Количество элементов, равных минимальному:", count_min)
+
+import math
+
+print("\n--- Задание 4 ---")
+
+F = [1.2, -0.5, 3.1, 2.4, 0.0, -1.3, 2.2, 4.4, -0.9, 1.5, 3.6]  # массив из 11 элементов
+m = 3.0  # заданное число
+
+G = []
+for f in F:
+    G_i = math.sqrt(abs(math.sin(f)) + (m ** 2 * f) / 2)
+    G.append(G_i)
+
+print("Массив G:", G)
+
+average = sum(G) / len(G)
+count_greater = 0
+for g in G:
+    if g > average:
+        count_greater += 1
+
+print("Среднее значение:", average)
+print("Количество элементов больше среднего:", count_greater)
+
+import math
+
+print("\n--- Задание 5 ---")
+
+H = [1.0, -2.5, 0.5, 3.0, -1.0, 2.0, -3.0, 4.5, 1.5, -0.7, 2.8, -2.2, 0.9]  # массив из 13 элементов
+a = 2.0  # заданное число
+
+K = []
+for h in H:
+    K_i = a * math.sqrt(abs(math.cos(h))) - (h ** 3) / (a + 2.5)
+    K.append(K_i)
+
+print("Массив K:", K)
+
+# найти максимальный отрицательный элемент
+max_negative = None
+for k in K:
+    if k < 0:
+        if max_negative is None or k > max_negative:
+            max_negative = k
+
+if max_negative is not None:
+    K[1] = max_negative  # заменяем второй элемент
+    print("Максимальный отрицательный элемент:", max_negative)
+else:
+    print("В массиве K нет отрицательных элементов")
+
+print("Обновлённый массив K:", K)
